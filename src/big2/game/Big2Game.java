@@ -20,7 +20,6 @@ public class Big2Game {
     private HashMap<Big2GameClient, HandCards> handCardsMap = new HashMap<>();
     private CardPatternEvaluator cardPatternEvaluator;
     private Big2Policy big2Policy;
-    private boolean gameOver = false;
     private int turn = -1;
 
     public Big2Game(Messenger messenger,
@@ -62,29 +61,33 @@ public class Big2Game {
         client.onPlayerTurn(handCardsMap.get(client), big2Policy, playerClients.get(turn));
     }
 
-    private boolean isGameOver() {
-        return gameOver;
-    }
-
     public void playCard(CardGroup cardPlay) {
         Big2GameClientContext context = getCurrentClientContext();
 
         try {
-            evaluateAndCompleteCardPlay(cardPlay);
+            playCard(cardPatternEvaluator.evaluate(cardPlay));
+            if (!isGameOver()) {
+                startNextPlayerTurn();
+            } else {
+                broadcast(ctx -> ctx.getClient().onGameOver(getCurrentPlayer(), messenger));
+            }
         } catch (CardPatternInvalidException err) {
             context.getClient().onCardPlayInvalid(cardPlay, context);
         }
     }
 
-    private void evaluateAndCompleteCardPlay(CardGroup cardPlay) {
-        CardPattern cardPlayPattern = cardPatternEvaluator.evaluate(cardPlay);
+    public void playCard(CardPattern cardPlayPattern) {
         Big2GameClientContext currentContext = getCurrentClientContext();
         if (big2Policy.isValidPlay(lastPlayPattern, cardPlayPattern)) {
             lastPlayPattern = cardPlayPattern;
             broadcast(ctx -> ctx.getClient().onNewCardPlay(getCurrentPlayer(), cardPlayPattern, ctx));
         } else {
-            currentContext.getClient().onCardPlayInvalid(cardPlay, currentContext);
+            currentContext.getClient().onCardPlayInvalid(new CardGroup(cardPlayPattern.getCards()), currentContext);
         }
+    }
+
+    private boolean isGameOver() {
+        return handCardsMap.get(getCurrentClient()).isEmpty();
     }
 
     public void pass() {
@@ -118,4 +121,5 @@ public class Big2Game {
     public CardPattern getLastCardPlayPattern() {
         return lastPlayPattern;
     }
+
 }

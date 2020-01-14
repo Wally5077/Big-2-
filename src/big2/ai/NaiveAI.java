@@ -28,7 +28,7 @@ public class NaiveAI extends AI {
         if (ceilingPattern == null)
             context.pass();
         else
-            context.playCard(ceilingPattern.getCardGroup());
+            context.playCard(ceilingPattern);
     }
 
     @Override

@@ -12,6 +12,6 @@ public class SamePatternPlayPolicy implements CardPlayPolicy {
     @Override
     public boolean isValidPlay(CardPattern lastPlay, CardPattern currentPlay) {
         return lastPlay.getClass() == currentPlay.getClass()
-                && cardPatternPolicy.getTotalLevel(lastPlay) < cardPatternPolicy.getTotalLevel(currentPlay);
+                && cardPatternPolicy.compare(lastPlay, currentPlay) > 0;
     }
 }

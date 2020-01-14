@@ -7,14 +7,8 @@ import big2.game.policies.CardPolicy;
 
 import java.util.Set;
 
-public interface CardPatternEvaluatorAdapter<T extends CardPattern> {
-
-	Class<T> getCardPatternType();
-
+public interface CardPatternEvaluatorAdapter {
 	boolean isMatched(CardGroup cardGroup, CardPolicy cardPolicy);
-
-	T create(CardGroup cardGroup, CardPolicy policy);
-
-	Set<T> enumerateCardPatterns(CardGroup cards, CardPolicy cardPolicy);
-
+	CardPattern create(CardGroup cardGroup, CardPolicy policy);
+	Set<? extends CardPattern> enumerateCardPatterns(CardGroup cards, CardPolicy cardPolicy);
 }

@@ -11,6 +11,6 @@ public class FreePatternPlayPolicy implements CardPlayPolicy {
 
     @Override
     public boolean isValidPlay(CardPattern lastPlay, CardPattern currentPlay) {
-        return cardPatternPolicy.getTotalLevel(lastPlay) < cardPatternPolicy.getTotalLevel(currentPlay);
+        return cardPatternPolicy.compare(lastPlay, currentPlay) > 0;
     }
 }

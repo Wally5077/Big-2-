@@ -62,6 +62,10 @@ public class CardGroup implements Iterable<Card> {
         };
     }
 
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
     public int size() {
         return cards.length;
     }

@@ -8,10 +8,10 @@ import java.util.stream.Collectors;
 
 public class CardPatternEvaluator {
 	private Big2Policy big2Policy;
-	private Collection<CardPatternEvaluatorAdapter<? extends CardPattern>> cardPatternEvaluatorAdapters;
+	private Collection<CardPatternEvaluatorAdapter> cardPatternEvaluatorAdapters;
 
 	public CardPatternEvaluator(Big2Policy big2Policy,
-								Collection<CardPatternEvaluatorAdapter<? extends CardPattern>>
+								Collection<CardPatternEvaluatorAdapter>
 										cardPatternEvaluatorAdapters) {
 		this.big2Policy = big2Policy;
 		this.cardPatternEvaluatorAdapters = cardPatternEvaluatorAdapters;

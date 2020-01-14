@@ -40,4 +40,7 @@ public final class Big2GameClientContext {
         return client;
     }
 
+    public void playCard(CardPattern cardPattern) {
+        big2Game.playCard(cardPattern);
+    }
 }

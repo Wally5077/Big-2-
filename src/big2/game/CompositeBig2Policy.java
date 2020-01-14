@@ -8,7 +8,7 @@ import big2.game.policies.CardPatternPolicy;
 import big2.game.policies.CardPlayPolicy;
 import big2.game.policies.CardPolicy;
 
-import java.util.Collection;
+import java.util.NavigableSet;
 
 public class CompositeBig2Policy implements Big2Policy {
     private CardPolicy cardPolicy;
@@ -33,28 +33,24 @@ public class CompositeBig2Policy implements Big2Policy {
         return cardPolicy.getNextRank(rank);
     }
 
-    @Override
-    public int getTotalLevel(CardPattern cardPattern) {
-        return cardPatternPolicy.getTotalLevel(cardPattern);
-    }
-
-    @Override
-    public int getCardPatternBaseLevel(Class<? extends CardPattern> type) {
-        return cardPatternPolicy.getCardPatternBaseLevel(type);
-    }
-
-    @Override
-    public Collection<Class<? extends CardPattern>> getCeilingLevelCardPatternTypes(Class<? extends CardPattern> type) {
-        return cardPatternPolicy.getCeilingLevelCardPatternTypes(type);
-    }
-
-    @Override
-    public Collection<Class<? extends CardPattern>> getFloorLevelCardPatternTypes(Class<? extends CardPattern> type) {
-        return cardPatternPolicy.getFloorLevelCardPatternTypes(type);
-    }
 
     @Override
     public boolean isValidPlay(CardPattern lastPlay, CardPattern currentPlay) {
         return cardPlayPolicy.isValidPlay(lastPlay, currentPlay);
+    }
+
+    @Override
+    public int compare(CardPattern cardPattern1, CardPattern cardPattern2) {
+        return cardPatternPolicy.compare(cardPattern1, cardPattern2);
+    }
+
+    @Override
+    public int compare(Class<? extends CardPattern> type1, Class<? extends CardPattern> type2) {
+        return cardPatternPolicy.compare(type1, type2);
+    }
+
+    @Override
+    public NavigableSet<Class<? extends CardPattern>> getOrderedCardPatternTypes() {
+        return cardPatternPolicy.getOrderedCardPatternTypes();
     }
 }

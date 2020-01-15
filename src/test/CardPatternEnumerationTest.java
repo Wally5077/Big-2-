@@ -6,6 +6,7 @@ import big2.cards.Rank;
 import big2.cards.Suit;
 import big2.game.patterns.*;
 import big2.game.patterns.FlushCardPatternEvaluatorAdapter.FlushCardPattern;
+import big2.game.patterns.FullHouseCardPatternEvaluatorAdapter.FullHouseCardPattern;
 import big2.game.patterns.PairCardPatternEvaluatorAdapter.PairCardPattern;
 import big2.game.patterns.SingleCardPatternEvaluatorAdapter.SingleCardPattern;
 import big2.game.patterns.StraightCardPatternEvaluatorAdapter.StraightCardPattern;
@@ -77,7 +78,7 @@ public class CardPatternEnumerationTest {
     @Test
     public void enumerateStraights() {
         StraightCardPatternEvaluatorAdapter adapter = new StraightCardPatternEvaluatorAdapter();
-        CardGroup cardGroup = new CardGroup(new Card(A, CLUB),  //0
+        CardGroup cardGroup = new CardGroup(false, new Card(A, CLUB),  //0
                                         new Card(R2, HEART), //1
                                         new Card(R2, DIAMOND), //2
                                         new Card(R2, SPADE), //3
@@ -98,6 +99,37 @@ public class CardPatternEnumerationTest {
                 cardGroup.selectIndices(7, 8, 9, 0, 3).getCards());
 
         Set<StraightCardPattern> cardPatterns = adapter.enumerateCardPatterns(cardGroup, cardPolicy);
+
+        assertCardsCombinationEqualWithoutOrder(expected, cardPatternsToListOfCards(cardPatterns));
+    }
+    @Test
+    public void enumerateFullHouse() {
+        FullHouseCardPatternEvaluatorAdapter adapter = new FullHouseCardPatternEvaluatorAdapter();
+        CardGroup cardGroup = new CardGroup(false, new Card(R7, CLUB),  //0
+                                        new Card(R2, HEART), //1
+                                        new Card(R2, DIAMOND), //2
+                                        new Card(R2, SPADE), //3
+                                        new Card(R3, CLUB), //4
+                                        new Card(R3, DIAMOND), //5
+                                        new Card(R4, SPADE), //6
+                                        new Card(R4, HEART), //7
+                                        new Card(A, HEART), //8
+                                        new Card(A, DIAMOND), //9
+                                        new Card(A, SPADE)); //10
+
+        List<Card[]> expected = Arrays.asList(
+                cardGroup.selectIndices(1, 2, 3, 4, 5).getCards(),  // 22233
+                cardGroup.selectIndices(1, 2, 3, 6, 7).getCards(),  // 22244
+                cardGroup.selectIndices(1, 2, 3, 8, 9).getCards(),  // 222AA (1)
+                cardGroup.selectIndices(1, 2, 3, 8, 10).getCards(),  // 222AA (2)
+                cardGroup.selectIndices(1, 2, 3, 9, 10).getCards(),  // 222AA (3)
+                cardGroup.selectIndices(8, 9, 10, 4, 5).getCards(),  // AAA33
+                cardGroup.selectIndices(8, 9, 10, 6, 7).getCards(),  // AAA44
+                cardGroup.selectIndices(8, 9, 10, 1, 2).getCards(),  // AAA22 (1)
+                cardGroup.selectIndices(8, 9, 10, 1, 3).getCards(),  // AAA22 (2)
+                cardGroup.selectIndices(8, 9, 10, 2, 3).getCards());  // AAA22 (3)
+
+        Set<FullHouseCardPattern> cardPatterns = adapter.enumerateCardPatterns(cardGroup, cardPolicy);
 
         assertCardsCombinationEqualWithoutOrder(expected, cardPatternsToListOfCards(cardPatterns));
     }

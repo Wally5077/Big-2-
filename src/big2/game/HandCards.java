@@ -24,8 +24,8 @@ public class HandCards extends CardGroup {
 	}
 
 	@Override
-	public HandCards remove(Card[] removedCards) {
-		return new HandCards(cardPatternEvaluator, super.remove(removedCards).getCards());
+	public HandCards exclude(Card[] excludedCards) {
+		return new HandCards(cardPatternEvaluator, super.exclude(excludedCards).getCards());
 	}
 
 	public CardPattern toPattern() {

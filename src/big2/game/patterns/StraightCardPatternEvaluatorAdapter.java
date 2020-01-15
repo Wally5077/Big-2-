@@ -38,6 +38,7 @@ public class StraightCardPatternEvaluatorAdapter implements CardPatternEvaluator
         private boolean[] member;
 
         public static Set<StraightCardPattern> enumerateCardPatterns(CardGroup cardGroup, CardPolicy cardPolicy) {
+            cardGroup.sortIfNotSorted();
             return new BranchOfBoundEnumerating(cardGroup.getCards(), cardPolicy).enumerate();
         }
 

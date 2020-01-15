@@ -35,7 +35,6 @@ public class CardGroup implements Iterable<Card> {
     }
 
     public CardGroup selectRange(int startInclusive, int endExclusive) {
-        sortIfNotSorted();
         Card[] sub = new Card[endExclusive - startInclusive];
         System.arraycopy(cards, startInclusive, sub, 0, sub.length);
         return new CardGroup(false, sub);
@@ -51,28 +50,10 @@ public class CardGroup implements Iterable<Card> {
     }
 
     public CardGroup selectIndices(int ...indices) {
-        sortIfNotSorted();
         return new CardGroup(false, getCards(indices));
     }
 
-    public CardGroup remove(Card[] removedCards) {
-        return new CardGroup(false, Arrays.stream(this.cards)
-                .filter(c -> !ArrayUtils.contains(removedCards, c))
-                .toArray(Card[]::new));
-    }
-
-    public Card get(int index) {
-        sortIfNotSorted();
-        return cards[index];
-    }
-
-    public Stream<Card> stream() {
-        sortIfNotSorted();
-        return Arrays.stream(cards);
-    }
-
     public Card[] getCards(int ...indices) {
-        sortIfNotSorted();
         Card[] cards = new Card[indices.length];
         int idx = 0;
         for (int index : indices) {
@@ -81,14 +62,26 @@ public class CardGroup implements Iterable<Card> {
         return cards;
     }
 
+    public CardGroup exclude(Card[] excludedCards) {
+        return new CardGroup(false, Arrays.stream(this.cards)
+                .filter(c -> !ArrayUtils.contains(excludedCards, c))
+                .toArray(Card[]::new));
+    }
+
+    public Card get(int index) {
+        return cards[index];
+    }
+
+    public Stream<Card> stream() {
+        return Arrays.stream(cards);
+    }
+
     public Card[] getCards() {
-        sortIfNotSorted();
         return cards;
     }
 
     @Override
     public Iterator<Card> iterator() {
-        sortIfNotSorted();
         return new Iterator<Card>() {
             int index = 0;
             @Override
@@ -124,7 +117,11 @@ public class CardGroup implements Iterable<Card> {
         return Arrays.hashCode(cards);
     }
 
-    private void sortIfNotSorted() {
+    public boolean isSorted() {
+        return sorted;
+    }
+
+    public void sortIfNotSorted() {
         if (!sorted) {
             Arrays.sort(cards, this::compareCards);
             sorted = true;
@@ -144,10 +141,10 @@ public class CardGroup implements Iterable<Card> {
     }
 
     public boolean isContinuousRank(CardPolicy cardPolicy) {
-        sortIfNotSorted();
+        Card[] cloneCards = Arrays.copyOf(this.cards, size());
 
-        Rank assertNextRank = get(0).getRank();
-        for (Card card : this) {
+        Rank assertNextRank = cloneCards[0].getRank();
+        for (Card card : cloneCards) {
             if (assertNextRank != card.getRank()) {
                 return false;
             }

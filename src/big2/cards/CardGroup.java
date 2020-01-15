@@ -153,7 +153,7 @@ public class CardGroup implements Iterable<Card> {
         return true;
     }
 
-    public List<CardGroup> divideByRank() {
+    public List<CardGroup> groupByRank() {
         return Arrays.stream(cards)
                 .collect(Collectors.groupingBy(Card::getRank))
                 .values().stream()

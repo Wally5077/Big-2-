@@ -6,6 +6,7 @@ import big2.cards.Rank;
 import big2.cards.Suit;
 import big2.game.patterns.*;
 import big2.game.patterns.FlushCardPatternEvaluatorAdapter.FlushCardPattern;
+import big2.game.patterns.FourOfRankCardPatternEvaluatorAdapter.FourOfRankCardPattern;
 import big2.game.patterns.FullHouseCardPatternEvaluatorAdapter.FullHouseCardPattern;
 import big2.game.patterns.PairCardPatternEvaluatorAdapter.PairCardPattern;
 import big2.game.patterns.SingleCardPatternEvaluatorAdapter.SingleCardPattern;
@@ -27,19 +28,9 @@ import static org.junit.Assert.assertEquals;
 
 ;
 
+@SuppressWarnings("Duplicates")
 public class CardPatternEnumerationTest {
     CardPolicy cardPolicy = new StandardCardPolicy();
-
-    CardGroup cardGroup = new CardGroup(new Card(A, CLUB),
-                                        new Card(A, HEART),
-                                        new Card(R2, CLUB),
-                                        new Card(R2, DIAMOND),
-                                        new Card(R2, HEART),
-                                        new Card(R2, Suit.SPADE),
-                                        new Card(Rank.R3, CLUB),
-                                        new Card(Rank.R3, DIAMOND),
-                                        new Card(Rank.R5, HEART),
-                                        new Card(Rank.R6, CLUB));
 
     @Test
     public void enumerateSingles() {
@@ -102,6 +93,7 @@ public class CardPatternEnumerationTest {
 
         assertCardsCombinationEqualWithoutOrder(expected, cardPatternsToListOfCards(cardPatterns));
     }
+
     @Test
     public void enumerateFullHouse() {
         FullHouseCardPatternEvaluatorAdapter adapter = new FullHouseCardPatternEvaluatorAdapter();
@@ -130,6 +122,42 @@ public class CardPatternEnumerationTest {
                 cardGroup.selectIndices(8, 9, 10, 2, 3).getCards());  // AAA22 (3)
 
         Set<FullHouseCardPattern> cardPatterns = adapter.enumerateCardPatterns(cardGroup, cardPolicy);
+
+        assertCardsCombinationEqualWithoutOrder(expected, cardPatternsToListOfCards(cardPatterns));
+    }
+
+    @Test
+    public void enumerateFourOfRank() {
+        FourOfRankCardPatternEvaluatorAdapter adapter = new FourOfRankCardPatternEvaluatorAdapter();
+        CardGroup cardGroup = new CardGroup(false, new Card(A, CLUB),  //0
+                                                new Card(A, HEART), //1
+                                                new Card(A, DIAMOND), //2
+                                                new Card(A, SPADE), //3
+                                                new Card(R3, CLUB), //4
+                                                new Card(R4, DIAMOND), //5
+                                                new Card(R5, SPADE), //6
+                                                new Card(R7, CLUB), //7
+                                                new Card(R7, HEART), //8
+                                                new Card(R7, DIAMOND), //9
+                                                new Card(R7, SPADE)); //10
+
+        List<Card[]> expected = Arrays.asList(
+                cardGroup.selectIndices(0, 1, 2, 3, 4).getCards(),
+                cardGroup.selectIndices(0, 1, 2, 3, 5).getCards(),
+                cardGroup.selectIndices(0, 1, 2, 3, 6).getCards(),
+                cardGroup.selectIndices(0, 1, 2, 3, 7).getCards(),
+                cardGroup.selectIndices(0, 1, 2, 3, 8).getCards(),
+                cardGroup.selectIndices(0, 1, 2, 3, 9).getCards(),
+                cardGroup.selectIndices(0, 1, 2, 3, 10).getCards(),
+                cardGroup.selectIndices(7, 8, 9, 10, 0).getCards(),
+                cardGroup.selectIndices(7, 8, 9, 10, 1).getCards(),
+                cardGroup.selectIndices(7, 8, 9, 10, 2).getCards(),
+                cardGroup.selectIndices(7, 8, 9, 10, 3).getCards(),
+                cardGroup.selectIndices(7, 8, 9, 10, 4).getCards(),
+                cardGroup.selectIndices(7, 8, 9, 10, 5).getCards(),
+                cardGroup.selectIndices(7, 8, 9, 10, 6).getCards());
+
+        Set<FourOfRankCardPattern> cardPatterns = adapter.enumerateCardPatterns(cardGroup, cardPolicy);
 
         assertCardsCombinationEqualWithoutOrder(expected, cardPatternsToListOfCards(cardPatterns));
     }

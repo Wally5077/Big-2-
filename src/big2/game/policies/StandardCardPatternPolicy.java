@@ -10,7 +10,8 @@ import big2.game.patterns.StraightFlushCardPatternEvaluatorAdapter.StraightFlush
 
 public class StandardCardPatternPolicy extends OrderedCardPatternPolicy {
 
-    public StandardCardPatternPolicy() {
+    public StandardCardPatternPolicy(CardPolicy cardPolicy) {
+        super(cardPolicy);
         addLast(SingleCardPattern.class);
         addLast(PairCardPattern.class);
         addLast(FlushCardPattern.class);

@@ -7,6 +7,13 @@ import big2.game.policies.CardPolicy;
 
 public class CardUtils {
 
+    public static int sumLevel(CardPolicy cardPolicy, Card ...cards) {
+        int sum = 0;
+        for (Card card : cards) {
+            sum += cardPolicy.getLevel(card);
+        }
+        return sum;
+    }
 
     public static int findMaxLevel(CardPolicy cardPolicy, Card ...cards) {
         int max = -99999;

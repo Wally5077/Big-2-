@@ -116,7 +116,7 @@ public class Big2Game {
     public void pass() {
         Player currentPlayer = getCurrentPlayer();
         boolean newRound = false;
-        if (++pass  == playerClients.size()-1) {
+        if (++pass  == playerClients.size()) {
             pass = 0;
             newRound = true;
             lastPlayPattern = null;

@@ -12,7 +12,7 @@ public class StandardCardPatternEvaluatorAdapters {
                 new PairCardPatternEvaluatorAdapter(),
                 new FullHouseCardPatternEvaluatorAdapter(),
                 straightCardPatternEvaluatorAdapter,
-                flushCardPatternEvaluatorAdapter,
+                /*flushCardPatternEvaluatorAdapter,*/
                 new FourOfRankCardPatternEvaluatorAdapter(),
                 new StraightFlushCardPatternEvaluatorAdapter(
                         flushCardPatternEvaluatorAdapter,

@@ -1,6 +1,7 @@
 package big2.game.policies;
 
 import big2.game.patterns.CardPattern;
+import big2.utils.CardUtils;
 
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -9,6 +10,11 @@ import java.util.TreeSet;
 
 public class OrderedCardPatternPolicy implements CardPatternPolicy {
     protected LinkedList<Class<? extends CardPattern>> cardPatternTypeList = new LinkedList<>();
+    private CardPolicy cardPolicy;
+
+    public OrderedCardPatternPolicy(CardPolicy cardPolicy) {
+        this.cardPolicy = cardPolicy;
+    }
 
     public void addFirst(Class<? extends CardPattern> insertedType) {
         cardPatternTypeList.addFirst(insertedType);
@@ -39,6 +45,12 @@ public class OrderedCardPatternPolicy implements CardPatternPolicy {
         int idx2 = cardPatternTypeList.indexOf(c2.getClass());
         if (idx1 != idx2) {
             return idx1 - idx2;
+        }
+        if (c1.equals(c2)) {
+            return 0;
+        }
+        if (c1.getLevel() == c2.getLevel()) {
+            return 1;  //if two different patterns have the same level, arbitrarily return 1.
         }
         return c1.getLevel() - c2.getLevel();
     }

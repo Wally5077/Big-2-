@@ -4,10 +4,11 @@ import big2.cards.Card;
 import big2.cards.CardGroup;
 import big2.game.policies.CardPatternPolicyAdapter;
 import big2.game.policies.CardPolicy;
+import big2.utils.ArrayUtils;
 import big2.utils.CardUtils;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class FullHouseCardPatternEvaluatorAdapter implements CardPatternEvaluatorAdapter {
 
@@ -28,8 +29,33 @@ public class FullHouseCardPatternEvaluatorAdapter implements CardPatternEvaluato
     }
 
     @Override
-    public Set<FullHouseCardPattern> enumerateCardPatterns(CardGroup cards, CardPolicy cardPolicy) {
-        return null;  //TODO
+    public Set<FullHouseCardPattern> enumerateCardPatterns(CardGroup cardGroup, CardPolicy cardPolicy) {
+        CardGroup[] divideByRank = cardGroup.divideByRank().stream()
+                                .filter(c -> c.size() < 2).toArray(CardGroup[]::new);
+
+        List<CardGroup[]> pairs = ArrayUtils.permutation(2, CardGroup[]::new, divideByRank)
+                                    .stream().filter(groups -> groups[0].size() + groups[1].size() >= 5)
+                                    .collect(Collectors.toList());
+
+        HashSet<FullHouseCardPattern> enumeration = new HashSet<>();
+        for (CardGroup[] pair : pairs) {
+            enumeration.addAll(enumerateCardPatternsFromPair(pair[0].getCards(), pair[1].getCards()));
+            ArrayUtils.swap(pair, 0, 1);
+            enumeration.addAll(enumerateCardPatternsFromPair(pair[0].getCards(), pair[1].getCards()));
+        }
+
+        return enumeration;  //TODO
+    }
+
+    private Set<FullHouseCardPattern> enumerateCardPatternsFromPair(Card[] moreThanThreeCardsPart, Card[] moreThanTwoCardsPart) {
+        if (moreThanThreeCardsPart.length < 3 || moreThanTwoCardsPart.length < 2) {
+            return Collections.emptySet();
+        }
+
+        List<Card[]> threeCardsParts = ArrayUtils.permutation(3, Card[]::new, moreThanThreeCardsPart);
+        List<Card[]> twoCardsParts = ArrayUtils.permutation(2, Card[]::new, moreThanTwoCardsPart);
+        return null;
+
     }
 
     public static class FullHouseCardPattern extends AbstractCardPattern {

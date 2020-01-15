@@ -27,7 +27,7 @@ public class PairCardPatternEvaluatorAdapter implements CardPatternEvaluatorAdap
         HashSet<PairCardPattern> pairEnumeration = new HashSet<>();
         List<CardGroup> divideByRank = cards.divideByRank();
         for (CardGroup cardGroup : divideByRank) {
-            List<Card[]> pairs = ArrayUtils.enumerate(2, Card[]::new, cardGroup.getCards());
+            List<Card[]> pairs = ArrayUtils.permutation(2, Card[]::new, cardGroup.getCards());
             for (Card[] pair : pairs) {
                 pairEnumeration.add(new PairCardPattern(cardPolicy, pair[0], pair[1]));
             }

@@ -4,13 +4,12 @@ import big2.cards.Card;
 import big2.cards.CardGroup;
 import big2.cards.Rank;
 import big2.cards.Suit;
-import big2.game.patterns.CardPattern;
-import big2.game.patterns.FlushCardPatternEvaluatorAdapter;
+import big2.game.patterns.*;
 import big2.game.patterns.FlushCardPatternEvaluatorAdapter.FlushCardPattern;
-import big2.game.patterns.PairCardPatternEvaluatorAdapter;
 import big2.game.patterns.PairCardPatternEvaluatorAdapter.PairCardPattern;
-import big2.game.patterns.SingleCardPatternEvaluatorAdapter;
 import big2.game.patterns.SingleCardPatternEvaluatorAdapter.SingleCardPattern;
+import big2.game.patterns.StraightCardPatternEvaluatorAdapter.StraightCardPattern;
+import big2.game.patterns.StraightFlushCardPatternEvaluatorAdapter.StraightFlushCardPattern;
 import big2.game.policies.CardPolicy;
 import big2.game.policies.StandardCardPolicy;
 import org.junit.Test;
@@ -76,8 +75,8 @@ public class CardPatternEnumerationTest {
     }
 
     @Test
-    public void enumerateFlushes() {
-        FlushCardPatternEvaluatorAdapter adapter = new FlushCardPatternEvaluatorAdapter();
+    public void enumerateStraights() {
+        StraightCardPatternEvaluatorAdapter adapter = new StraightCardPatternEvaluatorAdapter();
         CardGroup cardGroup = new CardGroup(new Card(A, CLUB),  //0
                                         new Card(R2, HEART), //1
                                         new Card(R2, DIAMOND), //2
@@ -98,7 +97,7 @@ public class CardPatternEnumerationTest {
                 cardGroup.selectIndices(7, 8, 9, 0, 2).getCards(),
                 cardGroup.selectIndices(7, 8, 9, 0, 3).getCards());
 
-        Set<FlushCardPattern> cardPatterns = adapter.enumerateCardPatterns(cardGroup, cardPolicy);
+        Set<StraightCardPattern> cardPatterns = adapter.enumerateCardPatterns(cardGroup, cardPolicy);
 
         assertCardsCombinationEqualWithoutOrder(expected, cardPatternsToListOfCards(cardPatterns));
     }
@@ -108,6 +107,7 @@ public class CardPatternEnumerationTest {
                 .map(CardPattern::getCards)
                 .collect(Collectors.toList());
     }
+
     private void assertCardsCombinationEqualWithoutOrder(List<Card[]> expect, List<Card[]> actual) {
         assertEquals(listOfCardsToSet(expect), listOfCardsToSet(actual));
     }

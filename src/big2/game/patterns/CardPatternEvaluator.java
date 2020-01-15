@@ -25,10 +25,10 @@ public class CardPatternEvaluator {
 				.orElseThrow(CardPatternInvalidException::new);
 	}
 
-	public CardPatternEnumeration enumerateCardPatterns(CardGroup cardGroup) {
-		return new EagerCardPatternEnumeration(
+	public CardPatternExhaustion enumerateCardPatterns(CardGroup cardGroup) {
+		return new EagerCardPatternExhaustion(
 				cardPatternEvaluatorAdapters.stream()
-				.map(adapter -> adapter.enumerateCardPatterns(cardGroup, big2Policy))
+				.map(adapter -> adapter.exhaustCardPatterns(cardGroup, big2Policy))
 				.flatMap(Collection::stream)
 				.collect(Collectors.toList()),
 				big2Policy);

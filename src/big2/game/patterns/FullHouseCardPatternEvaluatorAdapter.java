@@ -42,17 +42,17 @@ public class FullHouseCardPatternEvaluatorAdapter implements CardPatternEvaluato
      * - 3.1 let each part of the pair takes turn to be the 'three cards part' or 'two cards part' (If valid).
      *  Results: (1) Three-Cards-Part: [A, A, A, A],  Two-Cards-Part: [4, 4]
      *           (2) (Invalid) Three-Cards-Part: [4, 4],  Two-Cards-Part: [A, A, A, A]
-     * - 3.2 Do permutation in each part:
+     * - 3.2 Do combination in each part:
      *  Results: (1) Three-Cards-Part: [[A, A, A], [A, A, A], [A, A, A], [A, A, A]],  Two-Cards-Part: [[4, 4]]
      * - 3.3 Do Cartesian Product on (Three-Cards-Part, Two-Cards-Part)
      *  Results: ([A, A, A], [4, 4]), ([A, A, A], [4, 4]), ([A, A, A], [4, 4]), ([A, A, A], [4, 4])
      */
     @Override
-    public Set<FullHouseCardPattern> enumerateCardPatterns(CardGroup cardGroup, CardPolicy cardPolicy) {
+    public Set<FullHouseCardPattern> exhaustCardPatterns(CardGroup cardGroup, CardPolicy cardPolicy) {
         CardGroup[] groupByRank = cardGroup.groupByRank().stream()
                 .filter(c -> c.size() >= 2).toArray(CardGroup[]::new);
 
-        List<CardGroup[]> pairs = ArrayUtils.permutation(2, CardGroup[]::new, groupByRank)
+        List<CardGroup[]> pairs = ArrayUtils.combination(2, CardGroup[]::new, groupByRank)
                 .stream().filter(groups -> groups[0].size() + groups[1].size() >= 5)
                 .collect(Collectors.toList());
 
@@ -72,8 +72,8 @@ public class FullHouseCardPatternEvaluatorAdapter implements CardPatternEvaluato
             return Collections.emptySet();
         }
 
-        Card[][] threeCardsParts = ArrayUtils.permutation(3, Card[]::new, moreThanThreeCardsPart).toArray(new Card[0][]);
-        Card[][] twoCardsParts = ArrayUtils.permutation(2, Card[]::new, moreThanTwoCardsPart).toArray(new Card[0][]);
+        Card[][] threeCardsParts = ArrayUtils.combination(3, Card[]::new, moreThanThreeCardsPart).toArray(new Card[0][]);
+        Card[][] twoCardsParts = ArrayUtils.combination(2, Card[]::new, moreThanTwoCardsPart).toArray(new Card[0][]);
 
         return ArrayUtils.cartesianProduct(n -> new Card[n][5], threeCardsParts, twoCardsParts)
                 .stream()

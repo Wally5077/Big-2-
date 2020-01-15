@@ -1,15 +1,14 @@
 package big2.game.patterns;
 
-import big2.game.AbstractCardPatternEnumeration;
-import big2.game.patterns.CardPattern;
+import big2.game.AbstractCardPatternExhaustion;
 import big2.game.policies.CardPatternPolicy;
 
 import java.util.*;
 
 //TODO
-public class LazyCardPatternEnumeration  extends AbstractCardPatternEnumeration {
+public class LazyCardPatternExhaustion extends AbstractCardPatternExhaustion {
 
-	public LazyCardPatternEnumeration(List<CardPattern> cardPatterns, CardPatternPolicy cardPatternPolicy) {
+	public LazyCardPatternExhaustion(List<CardPattern> cardPatterns, CardPatternPolicy cardPatternPolicy) {
 		super(cardPatterns, cardPatternPolicy);
 	}
 

@@ -3,6 +3,7 @@ package big2.game;
 import big2.game.patterns.*;
 import big2.game.policies.*;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public class Big2GameBuilder {
 	private OrderedCardPatternPolicy orderedCardPatternPolicy = new OrderedCardPatternPolicy();
 	private CardPlayPolicy cardPlayPolicy = new SamePatternPlayPolicy(orderedCardPatternPolicy);
 	private Messenger messenger = new SystemOutMessenger();
-	private List<CardPatternEvaluatorAdapter> evaluatorAdapters = new LinkedList<>();
+	private List<CardPatternEvaluatorAdapter> evaluatorAdapters = StandardCardPatternEvaluatorAdapters.get();
 
 	public Big2GameBuilder cardPolicy(CardPolicy policy) {
 		this.cardPolicy = policy;

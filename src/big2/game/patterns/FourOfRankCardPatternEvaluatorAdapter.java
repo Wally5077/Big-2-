@@ -33,7 +33,7 @@ public class FourOfRankCardPatternEvaluatorAdapter implements CardPatternEvaluat
     }
 
     @Override
-    public Set<FourOfRankCardPattern> enumerateCardPatterns(CardGroup cardGroup, CardPolicy cardPolicy) {
+    public Set<FourOfRankCardPattern> exhaustCardPatterns(CardGroup cardGroup, CardPolicy cardPolicy) {
         List<CardGroup> fourOfRanks = cardGroup.groupByRank().stream()
                             .filter(c -> c.size() == 4).collect(Collectors.toList());
 

@@ -2,15 +2,14 @@ package big2.game.patterns;
 
 import big2.cards.Card;
 import big2.cards.CardGroup;
-import big2.cards.Rank;
 import big2.game.policies.CardPolicy;
+import big2.utils.ArrayUtils;
 import big2.utils.CardUtils;
 
-import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.function.IntUnaryOperator;
-import java.util.stream.IntStream;
+import java.util.stream.Collectors;
 
 public class FlushCardPatternEvaluatorAdapter implements CardPatternEvaluatorAdapter {
     @Override
@@ -24,8 +23,18 @@ public class FlushCardPatternEvaluatorAdapter implements CardPatternEvaluatorAda
     }
 
     @Override
-    public Set<FlushCardPattern> enumerateCardPatterns(CardGroup cardGroup, CardPolicy cardPolicy) {
-        return null; //TODO
+    public Set<FlushCardPattern> exhaustCardPatterns(CardGroup cardGroup, CardPolicy cardPolicy) {
+        List<CardGroup> groupBySuit = cardGroup.groupBySuit().stream()
+                                .filter(c -> c.size() >= 5).collect(Collectors.toList());
+
+        HashSet<FlushCardPattern> patterns = new HashSet<>();
+        for (CardGroup group : groupBySuit) {
+            List<Card[]> combination = ArrayUtils.combination(5, Card[]::new, group.getCards());
+            for (Card[] cards : combination) {
+                patterns.add(new FlushCardPattern(cardPolicy, cards));
+            }
+        }
+        return patterns;
     }
 
 

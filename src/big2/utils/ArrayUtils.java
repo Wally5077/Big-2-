@@ -3,7 +3,6 @@ package big2.utils;
 import big2.cards.Card;
 import big2.cards.Rank;
 import big2.cards.Suit;
-import javafx.scene.input.InputMethodTextRun;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,15 +40,15 @@ public class ArrayUtils {
         return product;
     }
 
-    public static <T> List<T[]> permutation(final int length, IntFunction<T[]> arrayFactory, final T[] candidates) {
+    public static <T> List<T[]> combination(final int length, IntFunction<T[]> arrayFactory, final T[] candidates) {
         List<T[]> enumeration = new LinkedList<>();
         if (candidates.length < length) {
             return Collections.emptyList();
         }
-        return permutation(enumeration, arrayFactory, length, 0, 0, new boolean[candidates.length], candidates);
+        return combination(enumeration, arrayFactory, length, 0, 0, new boolean[candidates.length], candidates);
     }
 
-    public static <T> List<T[]> permutation(final List<T[]> enumeration, IntFunction<T[]> arraySupplier,
+    public static <T> List<T[]> combination(final List<T[]> enumeration, IntFunction<T[]> arraySupplier,
                                             final int length, final int curLength, final int curIdx,
                                             final boolean[] member, final T[] candidates) {
         if (length == curLength) {
@@ -63,15 +62,15 @@ public class ArrayUtils {
             enumeration.add(objs);
         } else if (curIdx < member.length){
             member[curIdx] = true;
-            permutation(enumeration, arraySupplier, length, curLength+1, curIdx+1, member, candidates);
+            combination(enumeration, arraySupplier, length, curLength+1, curIdx+1, member, candidates);
             member[curIdx] = false;
-            permutation(enumeration, arraySupplier, length, curLength, curIdx+1, member, candidates);
+            combination(enumeration, arraySupplier, length, curLength, curIdx+1, member, candidates);
         }
         return enumeration;
     }
 
     public static void main(String[] args) {
-        List<Card[]> cardCombination = permutation(2, Card[]::new,
+        List<Card[]> cardCombination = combination(2, Card[]::new,
                 new Card[]{new Card(Rank.A, Suit.CLUB),
                         new Card(Rank.R2, Suit.CLUB),
                         new Card(Rank.R3, Suit.CLUB)});

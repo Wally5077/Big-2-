@@ -5,6 +5,7 @@ import big2.utils.ArrayUtils;
 import big2.utils.CardUtils;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -154,8 +155,16 @@ public class CardGroup implements Iterable<Card> {
     }
 
     public List<CardGroup> groupByRank() {
+        return groupBy(Card::getRank);
+    }
+
+    public List<CardGroup> groupBySuit() {
+        return groupBy(Card::getSuit);
+    }
+
+    public <K> List<CardGroup> groupBy(Function<Card, ? extends K> classifier) {
         return Arrays.stream(cards)
-                .collect(Collectors.groupingBy(Card::getRank))
+                .collect(Collectors.groupingBy(classifier))
                 .values().stream()
                 .map(cards -> new CardGroup(false, cards))
                 .collect(Collectors.toList());

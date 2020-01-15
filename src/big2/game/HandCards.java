@@ -3,7 +3,7 @@ package big2.game;
 import big2.cards.Card;
 import big2.cards.CardGroup;
 import big2.game.patterns.CardPattern;
-import big2.game.patterns.CardPatternEnumeration;
+import big2.game.patterns.CardPatternExhaustion;
 import big2.game.patterns.CardPatternEvaluator;
 
 public class HandCards extends CardGroup {
@@ -32,7 +32,7 @@ public class HandCards extends CardGroup {
 		return cardPatternEvaluator.evaluate(this);
 	}
 
-	public CardPatternEnumeration enumerateCardPatterns() {
+	public CardPatternExhaustion enumerateCardPatterns() {
 		return cardPatternEvaluator.enumerateCardPatterns(  this);
 	}
 

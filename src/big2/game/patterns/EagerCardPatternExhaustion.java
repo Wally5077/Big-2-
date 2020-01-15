@@ -1,7 +1,6 @@
 package big2.game.patterns;
 
-import big2.game.AbstractCardPatternEnumeration;
-import big2.game.patterns.CardPattern;
+import big2.game.AbstractCardPatternExhaustion;
 import big2.game.policies.CardPatternPolicy;
 
 import java.util.HashMap;
@@ -9,11 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-public class EagerCardPatternEnumeration extends AbstractCardPatternEnumeration {
+public class EagerCardPatternExhaustion extends AbstractCardPatternExhaustion {
 	private Map<Class<? extends CardPattern>, List<CardPattern>> cardPatternMap = new HashMap<>();
 	private TreeSet<CardPattern> cardPatternTreeSet = new TreeSet<>();
 
-	public EagerCardPatternEnumeration(List<CardPattern> cardPatterns, CardPatternPolicy cardPatternPolicy) {
+	public EagerCardPatternExhaustion(List<CardPattern> cardPatterns, CardPatternPolicy cardPatternPolicy) {
 		super(cardPatterns, cardPatternPolicy);
 		cardPatternTreeSet.addAll(cardPatterns);
 	}

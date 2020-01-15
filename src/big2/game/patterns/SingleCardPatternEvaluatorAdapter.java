@@ -20,7 +20,7 @@ public class SingleCardPatternEvaluatorAdapter implements CardPatternEvaluatorAd
     }
 
     @Override
-    public Set<SingleCardPattern> enumerateCardPatterns(CardGroup cards, CardPolicy cardPolicy) {
+    public Set<SingleCardPattern> exhaustCardPatterns(CardGroup cards, CardPolicy cardPolicy) {
         return cards.stream()
                 .map(card -> new SingleCardPattern(cardPolicy, card))
                 .collect(Collectors.toSet());

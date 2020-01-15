@@ -5,13 +5,22 @@ import big2.cards.CardGroup;
 import big2.game.policies.CardPolicy;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class StraightFlushCardPatternEvaluatorAdapter implements CardPatternEvaluatorAdapter {
+    private FlushCardPatternEvaluatorAdapter flushEvaluator;
+    private StraightCardPatternEvaluatorAdapter straightEvaluator;
+
+    public StraightFlushCardPatternEvaluatorAdapter(FlushCardPatternEvaluatorAdapter flushEvaluator,
+                                                    StraightCardPatternEvaluatorAdapter straightEvaluator) {
+        this.flushEvaluator = flushEvaluator;
+        this.straightEvaluator = straightEvaluator;
+    }
 
     @Override
     public boolean isMatched(CardGroup cardGroup, CardPolicy cardPolicy) {
-        return cardGroup.size() == 5 && cardGroup.isContinuousRank(cardPolicy)
-                && cardGroup.allInSameSuit();
+        return flushEvaluator.isMatched(cardGroup, cardPolicy) &&
+                straightEvaluator.isMatched(cardGroup, cardPolicy);
     }
 
     @Override
@@ -22,8 +31,13 @@ public class StraightFlushCardPatternEvaluatorAdapter implements CardPatternEval
     }
 
     @Override
-    public Set<StraightFlushCardPattern> enumerateCardPatterns(CardGroup cards, CardPolicy cardPolicy) {
-        return null;  //TODO
+    public Set<StraightFlushCardPattern> exhaustCardPatterns(CardGroup cardGroup, CardPolicy cardPolicy) {
+        return flushEvaluator.exhaustCardPatterns(cardGroup, cardPolicy).stream()
+                .filter(flush -> straightEvaluator.isMatched(flush.getCards(), cardPolicy))
+                .map(AbstractCardPattern::getCards)
+                .map(cards -> new StraightFlushCardPattern(cardPolicy,
+                        cards[0], cards[1], cards[2], cards[3], cards[4]))
+                .collect(Collectors.toSet());
     }
 
 

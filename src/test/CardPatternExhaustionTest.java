@@ -2,8 +2,6 @@ package test;
 
 import big2.cards.Card;
 import big2.cards.CardGroup;
-import big2.cards.Rank;
-import big2.cards.Suit;
 import big2.game.patterns.*;
 import big2.game.patterns.FlushCardPatternEvaluatorAdapter.FlushCardPattern;
 import big2.game.patterns.FourOfRankCardPatternEvaluatorAdapter.FourOfRankCardPattern;
@@ -29,11 +27,11 @@ import static org.junit.Assert.assertEquals;
 ;
 
 @SuppressWarnings("Duplicates")
-public class CardPatternEnumerationTest {
+public class CardPatternExhaustionTest {
     CardPolicy cardPolicy = new StandardCardPolicy();
 
     @Test
-    public void enumerateSingles() {
+    public void exhaustSingles() {
         SingleCardPatternEvaluatorAdapter adapter = new SingleCardPatternEvaluatorAdapter();
         CardGroup cardGroup = new CardGroup(new Card(A, CLUB),
                                     new Card(A, HEART),
@@ -44,13 +42,13 @@ public class CardPatternEnumerationTest {
                                     .map(c -> new Card[]{c})
                                     .collect(Collectors.toList());
 
-        Set<SingleCardPattern> cardPatterns = adapter.enumerateCardPatterns(cardGroup, cardPolicy);
+        Set<SingleCardPattern> cardPatterns = adapter.exhaustCardPatterns(cardGroup, cardPolicy);
 
         assertCardsCombinationEqualWithoutOrder(expected, cardPatternsToListOfCards(cardPatterns));
     }
 
     @Test
-    public void enumeratePairs() {
+    public void exhaustPairs() {
         PairCardPatternEvaluatorAdapter adapter = new PairCardPatternEvaluatorAdapter();
         CardGroup cardGroup = new CardGroup(new Card(A, CLUB),
                 new Card(A, HEART),
@@ -61,13 +59,13 @@ public class CardPatternEnumerationTest {
                                             new Card[]{new Card(A, CLUB), new Card(A, SPADE)},
                                             new Card[]{new Card(A, HEART), new Card(A, SPADE)});
 
-        Set<PairCardPattern> cardPatterns = adapter.enumerateCardPatterns(cardGroup, cardPolicy);
+        Set<PairCardPattern> cardPatterns = adapter.exhaustCardPatterns(cardGroup, cardPolicy);
 
         assertCardsCombinationEqualWithoutOrder(expected, cardPatternsToListOfCards(cardPatterns));
     }
 
     @Test
-    public void enumerateStraights() {
+    public void exhaustStraights() {
         StraightCardPatternEvaluatorAdapter adapter = new StraightCardPatternEvaluatorAdapter();
         CardGroup cardGroup = new CardGroup(false, new Card(A, CLUB),  //0
                                         new Card(R2, HEART), //1
@@ -89,13 +87,13 @@ public class CardPatternEnumerationTest {
                 cardGroup.selectIndices(7, 8, 9, 0, 2).getCards(),
                 cardGroup.selectIndices(7, 8, 9, 0, 3).getCards());
 
-        Set<StraightCardPattern> cardPatterns = adapter.enumerateCardPatterns(cardGroup, cardPolicy);
+        Set<StraightCardPattern> cardPatterns = adapter.exhaustCardPatterns(cardGroup, cardPolicy);
 
         assertCardsCombinationEqualWithoutOrder(expected, cardPatternsToListOfCards(cardPatterns));
     }
 
     @Test
-    public void enumerateFullHouse() {
+    public void exhaustFullHouse() {
         FullHouseCardPatternEvaluatorAdapter adapter = new FullHouseCardPatternEvaluatorAdapter();
         CardGroup cardGroup = new CardGroup(false, new Card(R7, CLUB),  //0
                                         new Card(R2, HEART), //1
@@ -121,13 +119,13 @@ public class CardPatternEnumerationTest {
                 cardGroup.selectIndices(8, 9, 10, 1, 3).getCards(),  // AAA22 (2)
                 cardGroup.selectIndices(8, 9, 10, 2, 3).getCards());  // AAA22 (3)
 
-        Set<FullHouseCardPattern> cardPatterns = adapter.enumerateCardPatterns(cardGroup, cardPolicy);
+        Set<FullHouseCardPattern> cardPatterns = adapter.exhaustCardPatterns(cardGroup, cardPolicy);
 
         assertCardsCombinationEqualWithoutOrder(expected, cardPatternsToListOfCards(cardPatterns));
     }
 
     @Test
-    public void enumerateFourOfRank() {
+    public void exhaustFourOfRank() {
         FourOfRankCardPatternEvaluatorAdapter adapter = new FourOfRankCardPatternEvaluatorAdapter();
         CardGroup cardGroup = new CardGroup(false, new Card(A, CLUB),  //0
                                                 new Card(A, HEART), //1
@@ -157,7 +155,62 @@ public class CardPatternEnumerationTest {
                 cardGroup.selectIndices(7, 8, 9, 10, 5).getCards(),
                 cardGroup.selectIndices(7, 8, 9, 10, 6).getCards());
 
-        Set<FourOfRankCardPattern> cardPatterns = adapter.enumerateCardPatterns(cardGroup, cardPolicy);
+        Set<FourOfRankCardPattern> cardPatterns = adapter.exhaustCardPatterns(cardGroup, cardPolicy);
+
+        assertCardsCombinationEqualWithoutOrder(expected, cardPatternsToListOfCards(cardPatterns));
+    }
+
+    @Test
+    public void exhaustFlush() {
+        FlushCardPatternEvaluatorAdapter adapter = new FlushCardPatternEvaluatorAdapter();
+        CardGroup cardGroup = new CardGroup(false, new Card(A, CLUB),  //0 *
+                                            new Card(R2, HEART), //1
+                                            new Card(R3, CLUB), //2 *
+                                            new Card(R4, SPADE), //3
+                                            new Card(R5, CLUB), //4 *
+                                            new Card(R6, DIAMOND), //5
+                                            new Card(R7, SPADE), //6
+                                            new Card(R8, CLUB), //7 *
+                                            new Card(R9, HEART), //8
+                                            new Card(R10, CLUB), //9 *
+                                            new Card(J, CLUB)); //10 *
+
+        List<Card[]> expected = Arrays.asList(  /*0, 2, 4, 7, 9, 10*/
+                cardGroup.selectIndices(0, 2, 4, 7, 9).getCards(),
+                cardGroup.selectIndices(0, 2, 4, 7, 10).getCards(),
+                cardGroup.selectIndices(0, 2, 4, 9, 10).getCards(),
+                cardGroup.selectIndices(0, 2, 7, 9, 10).getCards(),
+                cardGroup.selectIndices(0, 4, 7, 9, 10).getCards(),
+                cardGroup.selectIndices(2, 4, 7, 9, 10).getCards());
+
+        Set<FlushCardPattern> cardPatterns = adapter.exhaustCardPatterns(cardGroup, cardPolicy);
+
+        assertCardsCombinationEqualWithoutOrder(expected, cardPatternsToListOfCards(cardPatterns));
+    }
+
+    @Test
+    public void exhaustStraightFlush() {
+        StraightFlushCardPatternEvaluatorAdapter adapter =
+                new StraightFlushCardPatternEvaluatorAdapter(new FlushCardPatternEvaluatorAdapter(),
+                        new StraightCardPatternEvaluatorAdapter());
+
+        CardGroup cardGroup = new CardGroup(false, new Card(A, CLUB),  //0 *
+                                            new Card(R2, HEART), //1
+                                            new Card(R2, CLUB), //2 *
+                                            new Card(R4, SPADE), //3
+                                            new Card(R3, CLUB), //4 *
+                                            new Card(R6, DIAMOND), //5
+                                            new Card(R7, SPADE), //6
+                                            new Card(R4, CLUB), //7 *
+                                            new Card(R9, HEART), //8
+                                            new Card(R5, CLUB), //9 *
+                                            new Card(R6, CLUB)); //10 *
+
+        List<Card[]> expected = Arrays.asList(
+                cardGroup.selectIndices(0, 2, 4, 7, 9).getCards(),
+                cardGroup.selectIndices(2, 4, 7, 9, 10).getCards());
+
+        Set<StraightFlushCardPattern> cardPatterns = adapter.exhaustCardPatterns(cardGroup, cardPolicy);
 
         assertCardsCombinationEqualWithoutOrder(expected, cardPatternsToListOfCards(cardPatterns));
     }

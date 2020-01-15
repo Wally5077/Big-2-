@@ -4,7 +4,7 @@ import big2.game.patterns.CardPattern;
 
 import java.util.List;
 
-public interface CardPatternEnumeration {
+public interface CardPatternExhaustion {
     List<CardPattern> getCardPatternsByType(Class<? extends CardPattern> type);
 
     boolean containCardPatternType(Class type);

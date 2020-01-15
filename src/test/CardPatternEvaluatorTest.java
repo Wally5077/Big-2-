@@ -62,7 +62,8 @@ public class CardPatternEvaluatorTest {
 
     @Test
     public void testStraightFlushEvaluatorAdapter() {
-        StraightFlushCardPatternEvaluatorAdapter adapter = new StraightFlushCardPatternEvaluatorAdapter();
+        StraightFlushCardPatternEvaluatorAdapter adapter =
+                new StraightFlushCardPatternEvaluatorAdapter(new FlushCardPatternEvaluatorAdapter(), new StraightCardPatternEvaluatorAdapter());
 
         CardGroup cardGroup = new CardGroup(
                 new Card(Rank.A, Suit.CLUB), new Card(Rank.R2, Suit.CLUB),

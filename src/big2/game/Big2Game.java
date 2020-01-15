@@ -72,6 +72,7 @@ public class Big2Game {
         Big2GameClient client = context.getClient();
 
         try {
+            pass = 0;
             if (handCardsMap.get(getCurrentClient()).contains(cardPlay)) {
                 playCard(cardPatternEvaluator.evaluate(cardPlay));
             } else {
@@ -115,7 +116,7 @@ public class Big2Game {
     public void pass() {
         Player currentPlayer = getCurrentPlayer();
         boolean newRound = false;
-        if (pass ++ == playerClients.size()) {
+        if (++pass  == playerClients.size()-1) {
             pass = 0;
             newRound = true;
             lastPlayPattern = null;

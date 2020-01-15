@@ -39,15 +39,17 @@ public class PairCardPatternEvaluatorAdapter implements CardPatternEvaluatorAdap
     public static class PairCardPattern extends AbstractCardPattern {
         private Card card1;
         private Card card2;
+        private int level;
         public PairCardPattern(CardPolicy cardPolicy, Card c1, Card c2) {
             super(cardPolicy, c1, c2);
             this.card1 = c1;
             this.card2 = c2;
+            this.level = Math.max(cardPolicy.getLevel(card1), cardPolicy.getLevel(card2));
         }
 
         @Override
         public int getLevel() {
-            return Math.max(cardPolicy.getLevel(card1), cardPolicy.getLevel(card2));
+            return level;
         }
 
         public Card getCard1() {

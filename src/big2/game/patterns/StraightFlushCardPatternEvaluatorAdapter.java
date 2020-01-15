@@ -2,6 +2,7 @@ package big2.game.patterns;
 
 import big2.cards.Card;
 import big2.cards.CardGroup;
+import big2.game.patterns.StraightCardPatternEvaluatorAdapter.StraightCardPattern;
 import big2.game.policies.CardPolicy;
 
 import java.util.Set;
@@ -41,7 +42,7 @@ public class StraightFlushCardPatternEvaluatorAdapter implements CardPatternEval
     }
 
 
-    public static class StraightFlushCardPattern extends StraightCardPatternEvaluatorAdapter.StraightCardPattern {
+    public static class StraightFlushCardPattern extends StraightCardPattern {
         public StraightFlushCardPattern(CardPolicy cardPolicy,
                                         Card c1, Card c2, Card c3, Card c4, Card c5) {
             super(cardPolicy, c1, c2, c3, c4, c5);

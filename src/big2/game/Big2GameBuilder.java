@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Big2GameBuilder {
 	private CardPolicy cardPolicy = new StandardCardPolicy();
-	private OrderedCardPatternPolicy orderedCardPatternPolicy = new OrderedCardPatternPolicy();
+	private StandardCardPatternPolicy orderedCardPatternPolicy = new StandardCardPatternPolicy();
 	private CardPlayPolicy cardPlayPolicy = new SamePatternPlayPolicy(orderedCardPatternPolicy);
 	private Messenger messenger = new SystemOutMessenger();
 	private List<CardPatternEvaluatorAdapter> evaluatorAdapters = StandardCardPatternEvaluatorAdapters.get();

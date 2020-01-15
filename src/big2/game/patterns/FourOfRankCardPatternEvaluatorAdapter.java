@@ -51,6 +51,7 @@ public class FourOfRankCardPatternEvaluatorAdapter implements CardPatternEvaluat
     }
 
     public static class FourOfRankCardPattern extends AbstractCardPattern {
+        private int level;
         private Card[] fourCardsPart;
         private Card foot;
 
@@ -58,11 +59,12 @@ public class FourOfRankCardPatternEvaluatorAdapter implements CardPatternEvaluat
             super(cardPolicy, fourCardsPart, new Card[]{foot});
             this.fourCardsPart = fourCardsPart;
             this.foot = foot;
+            this.level = CardUtils.findMaxLevel(cardPolicy, cards);
         }
 
         @Override
         public int getLevel() {
-            return CardUtils.findMaxLevel(cardPolicy, cards);
+            return level;
         }
 
         public Card[] getFourCardsPart() {

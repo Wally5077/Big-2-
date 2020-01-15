@@ -42,7 +42,7 @@ public class NaiveAI extends AI {
             } else {
                 CardPattern ceilingPattern = exhaustion.ceilingCardPattern(lastPlay);
 
-                if (ceilingPattern == null)
+                if (ceilingPattern == null || ceilingPattern.getClass() != lastPlay.getClass())
                     context.pass();
                 else
                     context.playCard(ceilingPattern);

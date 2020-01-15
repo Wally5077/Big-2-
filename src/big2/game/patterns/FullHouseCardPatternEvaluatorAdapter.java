@@ -83,6 +83,7 @@ public class FullHouseCardPatternEvaluatorAdapter implements CardPatternEvaluato
     }
 
     public static class FullHouseCardPattern extends AbstractCardPattern {
+        private int level;
         private Card[] threeCardsPart;
         private Card[] twoCardsPart;
 
@@ -90,11 +91,12 @@ public class FullHouseCardPatternEvaluatorAdapter implements CardPatternEvaluato
             super(cardPolicy, threeCardsPart, twoCardsPart);
             this.threeCardsPart = threeCardsPart;
             this.twoCardsPart = twoCardsPart;
+            this.level = CardUtils.findMaxLevel(cardPolicy, threeCardsPart);
         }
 
         @Override
         public int getLevel() {
-            return CardUtils.findMaxLevel(cardPolicy, threeCardsPart);
+            return level;
         }
 
         public Card[] getThreeCardsPart() {

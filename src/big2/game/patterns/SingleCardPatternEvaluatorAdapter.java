@@ -28,11 +28,13 @@ public class SingleCardPatternEvaluatorAdapter implements CardPatternEvaluatorAd
 
     public static class SingleCardPattern extends AbstractCardPattern {
         private Card card;
+        private int level;
 
         public SingleCardPattern(CardPolicy cardPolicy, Card card) {
             super(cardPolicy, card);
             this.cardPolicy = cardPolicy;
             this.card = card;
+            this.level = cardPolicy.getLevel(card);
         }
 
         public Card getCard() {
@@ -41,7 +43,7 @@ public class SingleCardPatternEvaluatorAdapter implements CardPatternEvaluatorAd
 
         @Override
         public int getLevel() {
-            return cardPolicy.getLevel(card);
+            return level;
         }
     }
 }

@@ -15,7 +15,7 @@ public class EagerCardPatternExhaustion extends AbstractCardPatternExhaustion {
 	public EagerCardPatternExhaustion(List<CardPattern> cardPatterns, CardPatternPolicy cardPatternPolicy) {
 		super(cardPatterns, cardPatternPolicy);
 		cardPatternTreeSet = new TreeSet<>(cardPatternPolicy::compare);
-		cardPatternTreeSet.addAll(cardPatterns);
+		cardPatternTreeSet.addAll(cardPatterns);  //TODO TreeSet's equality issue with CardPolicy's level
 	}
 
 	@Override

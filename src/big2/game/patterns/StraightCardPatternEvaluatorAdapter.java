@@ -3,6 +3,7 @@ package big2.game.patterns;
 import big2.cards.Card;
 import big2.cards.CardGroup;
 import big2.game.policies.CardPolicy;
+import big2.utils.CardUtils;
 
 import java.util.Set;
 
@@ -29,6 +30,7 @@ public class StraightCardPatternEvaluatorAdapter implements CardPatternEvaluator
 
 
     public static class StraightCardPattern extends AbstractCardPattern {
+        private int level;
         private Card card1;
         private Card card2;
         private Card card3;
@@ -43,12 +45,14 @@ public class StraightCardPatternEvaluatorAdapter implements CardPatternEvaluator
             this.card3 = c3;
             this.card4 = c4;
             this.card5 = c5;
+            this.level = CardUtils.findMaxLevel(cardPolicy, c1,c2, c3, c4, c5);
         }
 
         @Override
         public int getLevel() {
-            return cardPolicy.getLevel(card5);
+            return level;
         }
+
         public Card getCard1() {
             return card1;
         }

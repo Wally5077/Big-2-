@@ -6,7 +6,10 @@ import big2.game.Big2GameClientContext;
 import big2.game.HandCards;
 import big2.game.Messenger;
 import big2.game.Player;
+import big2.game.patterns.CardPatternEnumeration;
 import big2.game.policies.Big2Policy;
+
+import java.util.List;
 
 public class NaiveAI extends AI {
     private Player player;

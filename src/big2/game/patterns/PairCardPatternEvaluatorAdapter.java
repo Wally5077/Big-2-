@@ -3,7 +3,10 @@ package big2.game.patterns;
 import big2.cards.Card;
 import big2.cards.CardGroup;
 import big2.game.policies.CardPolicy;
+import big2.utils.ArrayUtils;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class PairCardPatternEvaluatorAdapter implements CardPatternEvaluatorAdapter {
@@ -21,7 +24,15 @@ public class PairCardPatternEvaluatorAdapter implements CardPatternEvaluatorAdap
 
     @Override
     public Set<PairCardPattern> enumerateCardPatterns(CardGroup cards, CardPolicy cardPolicy) {
-        return null;  //TODO
+        HashSet<PairCardPattern> pairEnumeration = new HashSet<>();
+        List<CardGroup> divideByRank = cards.divideByRank();
+        for (CardGroup cardGroup : divideByRank) {
+            List<Card[]> pairs = ArrayUtils.enumerate(2, Card[]::new, cardGroup.getCards());
+            for (Card[] pair : pairs) {
+                pairEnumeration.add(new PairCardPattern(cardPolicy, pair[0], pair[1]));
+            }
+        }
+        return pairEnumeration;
     }
 
 

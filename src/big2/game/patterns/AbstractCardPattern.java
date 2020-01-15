@@ -1,6 +1,7 @@
 package big2.game.patterns;
 
 import big2.cards.Card;
+import big2.game.policies.CardPatternPolicy;
 import big2.game.policies.CardPolicy;
 
 import java.util.Arrays;
@@ -39,8 +40,4 @@ public abstract class AbstractCardPattern implements CardPattern {
         return Arrays.hashCode(cards);
     }
 
-    @Override
-    public int compareTo(CardPattern o) {
-        return getLevel() - o.getLevel();
-    }
 }

@@ -22,8 +22,9 @@ public class FullHouseCardPatternEvaluatorAdapter implements CardPatternEvaluato
     @Override
     public FullHouseCardPattern create(CardGroup cardGroup, CardPolicy policy) {
         List<CardGroup> cardGroups = cardGroup.divideByRank();
-        return new FullHouseCardPattern(policy, cardGroups.get(0).getCards(),
-                cardGroups.get(1).getCards());
+        return new FullHouseCardPattern(policy,
+                cardGroups.get(0).size() == 3 ? cardGroups.get(0).getCards() : cardGroups.get(1).getCards(),
+                cardGroups.get(0).size() == 2 ? cardGroups.get(0).getCards() : cardGroups.get(1).getCards());
     }
 
     @Override

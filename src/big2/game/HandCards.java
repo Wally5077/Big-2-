@@ -19,8 +19,13 @@ public class HandCards extends CardGroup {
 	}
 
 	@Override
-	public HandCards select(int ...indices) {
+	public HandCards selectIndices(int ...indices) {
 		return new HandCards(cardPatternEvaluator, getCards(indices));
+	}
+
+	@Override
+	public HandCards remove(Card[] removedCards) {
+		return new HandCards(cardPatternEvaluator, super.remove(removedCards).getCards());
 	}
 
 	public CardPattern toPattern() {

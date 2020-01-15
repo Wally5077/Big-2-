@@ -32,7 +32,7 @@ public class Main {
         public void onPlayerTurn(HandCards handCards,
                                  Big2Policy policy,
                                  Big2GameClientContext context) {
-
+            System.out.println();
         }
 
         @Override

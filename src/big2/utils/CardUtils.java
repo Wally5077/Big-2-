@@ -7,6 +7,7 @@ import big2.game.policies.CardPolicy;
 
 public class CardUtils {
 
+
     public static int findMaxLevel(CardPolicy cardPolicy, Card[] cards) {
         int max = -99999;
         for (Card card : cards) {

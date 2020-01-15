@@ -1,10 +1,15 @@
 package big2.game;
 
+import java.util.Objects;
+
 public class Player {
 	private int id;
 	private String name;
 
 	public Player(String name) {
+		if (name == null || name.isEmpty()) {
+			throw new IllegalArgumentException("The player's name cannot be null or empty.");
+		}
 		this.name = name;
 	}
 
@@ -17,7 +22,7 @@ public class Player {
 		return id;
 	}
 
-	public void setId(int id) {
+	void setId(int id) {
 		this.id = id;
 	}
 
@@ -27,6 +32,20 @@ public class Player {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Player player = (Player) o;
+		return id == player.id &&
+				name.equals(player.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, name);
 	}
 
 	@Override

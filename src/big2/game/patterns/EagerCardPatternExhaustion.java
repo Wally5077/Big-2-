@@ -10,10 +10,11 @@ import java.util.TreeSet;
 
 public class EagerCardPatternExhaustion extends AbstractCardPatternExhaustion {
 	private Map<Class<? extends CardPattern>, List<CardPattern>> cardPatternMap = new HashMap<>();
-	private TreeSet<CardPattern> cardPatternTreeSet = new TreeSet<>();
+	private TreeSet<CardPattern> cardPatternTreeSet;
 
 	public EagerCardPatternExhaustion(List<CardPattern> cardPatterns, CardPatternPolicy cardPatternPolicy) {
 		super(cardPatterns, cardPatternPolicy);
+		cardPatternTreeSet = new TreeSet<>(cardPatternPolicy::compare);
 		cardPatternTreeSet.addAll(cardPatterns);
 	}
 

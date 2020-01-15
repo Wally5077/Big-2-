@@ -12,6 +12,7 @@ import big2.game.patterns.StraightCardPatternEvaluatorAdapter.StraightCardPatter
 import big2.game.patterns.StraightFlushCardPatternEvaluatorAdapter.StraightFlushCardPattern;
 import big2.game.policies.CardPolicy;
 import big2.game.policies.StandardCardPolicy;
+import big2.utils.CollectionUtils;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -222,8 +223,13 @@ public class CardPatternExhaustionTest {
     }
 
     private void assertCardsCombinationEqualWithoutOrder(List<Card[]> expect, List<Card[]> actual) {
-        assertEquals(listOfCardsToSet(expect), listOfCardsToSet(actual));
+        Set<Set<Card>> expectSets = listOfCardsToSet(expect);
+        Set<Set<Card>> actualSets = listOfCardsToSet(actual);
+        Set<Set<Card>> notCovered = new HashSet<>(expectSets);
+        notCovered.removeAll(actualSets);
+        assertEquals("Not Covered: " + CollectionUtils.setOfSetsToString(notCovered), expectSets, actualSets);
     }
+
 
 
     private Set<Set<Card>> listOfCardsToSet(List<Card[]> expect) {

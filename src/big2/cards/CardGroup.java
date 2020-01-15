@@ -18,7 +18,7 @@ public class CardGroup implements Iterable<Card> {
         this.cards = new Card[cardList.size()];
         cardList.toArray(cards);
         if (sort) {
-            Arrays.sort(cards, this::compareCards);
+            sort(cards);
             this.sorted = true;
         }
     }
@@ -118,13 +118,17 @@ public class CardGroup implements Iterable<Card> {
         return Arrays.hashCode(cards);
     }
 
+    protected void sort(Card[] cards) {
+        Arrays.sort(cards, this::compareCards);
+    }
+
     public boolean isSorted() {
         return sorted;
     }
 
     public void sortIfNotSorted() {
         if (!sorted) {
-            Arrays.sort(cards, this::compareCards);
+            sort(cards);
             sorted = true;
         }
     }
@@ -179,9 +183,22 @@ public class CardGroup implements Iterable<Card> {
         return false;
     }
 
+    public boolean contains(CardGroup cardGroup) {
+        outer:
+        for (Card card : cardGroup) {
+            for (Card myCard : cards) {
+                if (card.equals(myCard)) {
+                    continue outer;
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public String toString() {
-        sortIfNotSorted();
         return Arrays.toString(cards);
     }
+
 }

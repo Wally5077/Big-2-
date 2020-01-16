@@ -31,8 +31,8 @@ public class StraightBranchOfBoundExhaustion {
     public Set<StraightCardPattern> enumerate() {
         if (exhaustion == null) {
             exhaustion = new HashSet<>();
-            enumerating(0, getNextRank(candidates[0].getRank()),
-                    1, 1, 1);
+                enumerating(candidates[0].getRank(),
+                        0, 0 );
         }
         return exhaustion;
     }
@@ -44,16 +44,12 @@ public class StraightBranchOfBoundExhaustion {
     /**
      * Note: This algorithm assumes the candidate Cards are sort.
      *
-     * @param startIndex     where the Flush pattern starts
-     * @param expectNextRank the rank expected in the sequence of Flush being searched
-     * @param curLength      number of members have been found in the sequence of Flush being searched
-     * @param curSeeking     count of seeking in the current sequence
+     * @param expectNextRank the rank expected in the sequence of Straight being searched
+     * @param curLength      number of members have been found in the sequence of Straight being searched
      * @param curIndex       current index of the card being seeked
      */
-    private void enumerating(int startIndex, Rank expectNextRank, int curLength,
-                             int curSeeking, int curIndex) {
+    private void enumerating(Rank expectNextRank, int curLength, int curIndex) {
         recursionCount++;
-        member[startIndex] = true;
 
         Card card = candidates[curIndex];
         if (card.getRank() == expectNextRank) {
@@ -63,29 +59,17 @@ public class StraightBranchOfBoundExhaustion {
                 assert !exhaustion.contains(pattern);
                 exhaustion.add(pattern);
             } else { // keep finding the next Flush member
-                enumerating(startIndex, getNextRank(expectNextRank),
-                        curLength + 1, curSeeking + 1,
+                enumerating(getNextRank(expectNextRank),
+                        curLength + 1,
                         (curIndex + 1) % candidates.length /*cyclic seeking*/);
             }
             member[curIndex] = false;
-            enumerating(startIndex, expectNextRank, curLength,
-                    curSeeking + 1, (curIndex + 1) % candidates.length);
-        } else if (getNextRank(card.getRank()) == expectNextRank) {
-            enumerating(startIndex, expectNextRank,
-                    curLength, curSeeking + 1,
+            enumerating(expectNextRank, curLength,
                     (curIndex + 1) % candidates.length);
-        }
-
-
-
-        // The end for the finding started from startIndex, switch to new branch
-        if (startIndex == curIndex-1 &&
-                startIndex != candidates.length - 1) {
-            int nextStartIndex = startIndex + 1;
-            member[startIndex] = false;
-            enumerating(nextStartIndex,
-                    getNextRank(candidates[nextStartIndex % candidates.length].getRank()),
-                    1, 1, (nextStartIndex + 1) % candidates.length);
+        } else if (getNextRank(card.getRank()) == expectNextRank) {
+            enumerating(expectNextRank,
+                    curLength,
+                    (curIndex + 1) % candidates.length);
         }
     }
 

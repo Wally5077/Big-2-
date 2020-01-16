@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Big2Game big2Game = new Big2GameBuilder().build();
-        big2Game.addClientPlayer(new Client(new Player("Johnny")));
+        big2Game.addClientPlayer(new Client("Johnny"));
         big2Game.addClientPlayer(new NaiveAI("AI"));
         big2Game.addClientPlayer(new NaiveAI("AI"));
         big2Game.addClientPlayer(new NaiveAI("AI"));
@@ -21,36 +21,36 @@ public class Main {
 
     public static class Client implements Big2Client {
         private Scanner scanner = new Scanner(System.in);
-        private Player player;
+        private String name;
         private HandCards handCards;
 
-        public Client(Player player) {
-            this.player = player;
+        public Client(String name) {
+            this.name = name;
         }
 
         @Override
-        public Player getPlayer() {
-            return player;
+        public String getName() {
+            return name;
         }
 
         @Override
-        public void onGameStart(int yourId) {
+        public void onGameStart(Player you) {
             System.out.println("The game is started!");
+        }
+
+        @Override
+        public void onPlayerTurn(boolean isYourTurn, Player player, boolean newRound, Big2ClientContext context) {
+            System.out.printf("It's %s's turn!\n", player.getName());
+
+            if (isYourTurn) {
+                printHandCardsInfo();
+                doMyTurn(context);
+            }
         }
 
         @Override
         public void onReceiveHandCards(HandCards handCards, Big2ClientContext context) {
             this.handCards = handCards;
-        }
-
-        @Override
-        public void onPlayerTurn(Player player, boolean newRound, Big2ClientContext context) {
-            System.out.printf("It's %s's turn!\n", player.getName());
-
-            if (player.getId() == this.player.getId()) {
-                printHandCardsInfo();
-                doMyTurn(context);
-            }
         }
 
         private void doMyTurn(Big2ClientContext context) {

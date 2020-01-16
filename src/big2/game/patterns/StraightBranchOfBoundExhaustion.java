@@ -31,8 +31,12 @@ public class StraightBranchOfBoundExhaustion {
     public Set<StraightCardPattern> enumerate() {
         if (exhaustion == null) {
             exhaustion = new HashSet<>();
-                enumerating(candidates[0].getRank(),
-                        0, 0 );
+            for (int i = 0; i < candidates.length; i++) {
+                member[i] = true;
+                enumerating(getNextRank(candidates[i].getRank()),
+                        1,  (i+1) % candidates.length );
+                member[i] = false;
+            }
         }
         return exhaustion;
     }
@@ -64,18 +68,11 @@ public class StraightBranchOfBoundExhaustion {
                         (curIndex + 1) % candidates.length /*cyclic seeking*/);
             }
             member[curIndex] = false;
-            enumerating(expectNextRank, curLength,
-                    (curIndex + 1) % candidates.length);
+            enumerating(expectNextRank, curLength, (curIndex + 1) % candidates.length);
         } else if (getNextRank(card.getRank()) == expectNextRank) {
             enumerating(expectNextRank,
                     curLength,
                     (curIndex + 1) % candidates.length);
-        }
-    }
-
-    private void resetMember() {
-        for (int i = 0; i < member.length; i++) {
-            member[i] = false;
         }
     }
 

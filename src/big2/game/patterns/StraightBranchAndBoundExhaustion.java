@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-public class StraightBranchOfBoundExhaustion {
+public class StraightBranchAndBoundExhaustion {
     private int recursionCount = 0;
     private final Card[] candidates;
     private final CardPolicy cardPolicy;
@@ -19,10 +19,10 @@ public class StraightBranchOfBoundExhaustion {
 
     public static Set<StraightCardPattern> enumerateCardPatterns(CardGroup cardGroup, CardPolicy cardPolicy) {
         cardGroup.sortIfNotSorted();
-        return new StraightBranchOfBoundExhaustion(cardGroup.getCards(), cardPolicy).enumerate();
+        return new StraightBranchAndBoundExhaustion(cardGroup.getCards(), cardPolicy).enumerate();
     }
 
-    public StraightBranchOfBoundExhaustion(Card[] candidates, CardPolicy cardPolicy) {
+    public StraightBranchAndBoundExhaustion(Card[] candidates, CardPolicy cardPolicy) {
         this.candidates = candidates;
         this.member = new boolean[candidates.length];
         this.cardPolicy = cardPolicy;
@@ -59,13 +59,9 @@ public class StraightBranchOfBoundExhaustion {
         if (card.getRank() == expectNextRank) {
             member[curIndex] = true;
             if (curLength == 4) {
-                StraightCardPattern pattern = collectMembersToCardPattern();
-                assert !exhaustion.contains(pattern);
-                exhaustion.add(pattern);
+                exhaustion.add(collectMembersToCardPattern());
             } else { // keep finding the next Flush member
-                enumerating(getNextRank(expectNextRank),
-                        curLength + 1,
-                        (curIndex + 1) % candidates.length /*cyclic seeking*/);
+                enumerating(getNextRank(expectNextRank), curLength + 1, (curIndex + 1) % candidates.length /*cyclic seeking*/);
             }
             member[curIndex] = false;
             enumerating(expectNextRank, curLength, (curIndex + 1) % candidates.length);

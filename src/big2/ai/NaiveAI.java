@@ -34,12 +34,9 @@ public class NaiveAI extends AI {
                 context.playCard(exhaustion.pollLastCardPattern());
             } else {
                 CardPattern lastPlay = context.getLastCardPlayPattern();
-                CardPattern higherCardPattern = exhaustion.higherCardPattern(lastPlay);
-
-                if (higherCardPattern == null || higherCardPattern.getClass() != lastPlay.getClass())
-                    context.pass();
-                else
-                    context.playCard(higherCardPattern);
+                exhaustion.higherCardPattern(lastPlay)
+                        .ifPresent(context::playCard)
+                        .orElse(context::pass);
             }
         }
     }
@@ -57,7 +54,7 @@ public class NaiveAI extends AI {
 
     @Override
     public void onCardPlayInvalid(CardGroup play, Big2ClientContext context) {
-        throw new IllegalStateException("The AI's implementation is incorrect.");
+        context.pass();
     }
 
     @Override

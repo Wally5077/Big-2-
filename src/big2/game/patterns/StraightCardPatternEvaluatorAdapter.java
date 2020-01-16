@@ -23,7 +23,7 @@ public class StraightCardPatternEvaluatorAdapter implements CardPatternEvaluator
 
     @Override
     public Set<StraightCardPattern> exhaustCardPatterns(CardGroup cards, CardPolicy cardPolicy) {
-        return StraightBranchOfBoundExhaustion.enumerateCardPatterns(cards, cardPolicy);
+        return StraightBranchAndBoundExhaustion.enumerateCardPatterns(cards, cardPolicy);
     }
 
     public static class StraightCardPattern extends AbstractCardPattern {

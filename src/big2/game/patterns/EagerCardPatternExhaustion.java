@@ -2,9 +2,11 @@ package big2.game.patterns;
 
 import big2.cards.CardGroup;
 import big2.game.policies.Big2Policy;
-import big2.game.policies.CardPatternPolicy;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class EagerCardPatternExhaustion implements CardPatternExhaustion {
@@ -38,23 +40,23 @@ public class EagerCardPatternExhaustion implements CardPatternExhaustion {
 	}
 
 	@Override
-	public CardPattern lowerCardPattern(CardPattern cardPattern) {
-		return cardPatternTreeSet.lower(cardPattern);
+	public CardPatternOptional lowerCardPattern(CardPattern cardPattern) {
+		return CardPatternOptional.ofNullable(cardPatternTreeSet.lower(cardPattern));
 	}
 
 	@Override
-	public CardPattern higherCardPattern(CardPattern cardPattern) {
-		return cardPatternTreeSet.higher(cardPattern);
+	public CardPatternOptional higherCardPattern(CardPattern cardPattern) {
+		return CardPatternOptional.ofNullable(cardPatternTreeSet.higher(cardPattern));
 	}
 
 	@Override
-	public CardPattern ceilingCardPattern(CardPattern cardPattern) {
-		return cardPatternTreeSet.ceiling(cardPattern);
+	public CardPatternOptional ceilingCardPattern(CardPattern cardPattern) {
+		return CardPatternOptional.ofNullable(cardPatternTreeSet.ceiling(cardPattern));
 	}
 
 	@Override
-	public CardPattern floorCardPattern(CardPattern cardPattern) {
-		return cardPatternTreeSet.floor(cardPattern);
+	public CardPatternOptional floorCardPattern(CardPattern cardPattern) {
+		return CardPatternOptional.ofNullable(cardPatternTreeSet.floor(cardPattern));
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import java.util.Stack;
 
 public class Deck {
     private Stack<Card> cards = new Stack<>();
-    private Stack<Card> discards = new Stack<>();
 
     public Deck() {
         init();
@@ -29,14 +28,16 @@ public class Deck {
         return cards.pop();
     }
 
+    public void shuffle(int times) {
+        for (int i = 0; i < times; i++) {
+            Collections.shuffle(cards);
+        }
+    }
+
     public void shuffle() {
-        cards.addAll(discards);
         Collections.shuffle(cards);
     }
 
-    public void discard(Card card) {
-        discards.push(card);
-    }
 
     public Card[][] deal(int numOfDivision) {
         int size = cards.size();

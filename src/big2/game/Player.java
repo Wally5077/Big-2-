@@ -1,10 +1,14 @@
 package big2.game;
 
+import big2.cards.Card;
+import big2.cards.CardGroup;
+
 import java.util.Objects;
 
 public class Player {
 	private int id;
 	private String name;
+	private HandCards handCards;
 
 	public Player(String name) {
 		if (name == null || name.isEmpty()) {
@@ -18,12 +22,32 @@ public class Player {
 		this.name = name;
 	}
 
-	public int getId() {
-		return id;
+	void setHandCards(HandCards handCards) {
+		this.handCards = handCards;
+	}
+
+	public boolean containsHandCards(CardGroup cardGroup) {
+		return handCards.contains(cardGroup);
+	}
+
+	public boolean hasEmptyHandCards() {
+		return handCards.isEmpty();
+	}
+
+	public void removeHandCards(Card[] cards) {
+		handCards = handCards.exclude(cards);
+	}
+
+	public HandCards getHandCards() {
+		return handCards;
 	}
 
 	void setId(int id) {
 		this.id = id;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public String getName() {

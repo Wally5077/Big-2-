@@ -1,70 +1,66 @@
 package big2.ai;
 
 import big2.cards.CardGroup;
-import big2.game.patterns.CardPattern;
-import big2.game.Big2GameClientContext;
+import big2.game.Big2ClientContext;
 import big2.game.HandCards;
 import big2.game.Messenger;
 import big2.game.Player;
+import big2.game.patterns.CardPattern;
 import big2.game.patterns.CardPatternExhaustion;
 
 public class NaiveAI extends AI {
-    private Player player;
+    private String name;
     private HandCards handCards;
 
     public NaiveAI(String name) {
-        this.player = new Player(name);
+        this.name = name;
     }
 
     @Override
-    public Player getPlayer() {
-        return player;
+    public String getName() {
+        return name;
     }
 
     @Override
-    public void onGameStart(int yourId) {
-        player.setName(player.getName() + "-" + yourId);
-    }
-
-
-    @Override
-    public void onReceiveHandCards(HandCards handCards, Big2GameClientContext context) {
-        this.handCards = handCards;
+    public void onGameStart(Player you) {
+        you.setName(you.getName() + "-" + you.getId());
     }
 
     @Override
-    public void onPlayerTurn(Player player, boolean newRound, Big2GameClientContext context) {
-        if (player.getId() == this.player.getId()) {
-            CardPattern lastPlay = context.getLastCardPlayPattern();
+    public void onPlayerTurn(boolean isYourTurn, Player player, boolean newRound, Big2ClientContext context) {
+        if (isYourTurn) {
             CardPatternExhaustion exhaustion = handCards.exhaustCardPatterns();
-            if (lastPlay == null) {
+            if (context.isNewRound()) {
                 context.playCard(exhaustion.pollLastCardPattern());
             } else {
-                CardPattern ceilingPattern = exhaustion.ceilingCardPattern(lastPlay);
+                CardPattern lastPlay = context.getLastCardPlayPattern();
+                CardPattern higherCardPattern = exhaustion.higherCardPattern(lastPlay);
 
-                if (ceilingPattern == null || ceilingPattern.getClass() != lastPlay.getClass())
+                if (higherCardPattern == null || higherCardPattern.getClass() != lastPlay.getClass())
                     context.pass();
                 else
-                    context.playCard(ceilingPattern);
+                    context.playCard(higherCardPattern);
             }
         }
     }
 
     @Override
-    public void onNewCardPlay(Player player, CardPattern play, Big2GameClientContext context) {
+    public void onReceiveHandCards(HandCards handCards, Big2ClientContext context) {
+        this.handCards = handCards;
     }
 
     @Override
-    public void onGameOver(Player winner, Messenger messenger) {
-    }
+    public void onNewCardPlay(Player player, CardPattern play, Big2ClientContext context) { }
 
     @Override
-    public void onCardPlayInvalid(CardGroup play, Big2GameClientContext context) {
+    public void onGameOver(Player winner, Messenger messenger) { }
+
+    @Override
+    public void onCardPlayInvalid(CardGroup play, Big2ClientContext context) {
         throw new IllegalStateException("The AI's implementation is incorrect.");
     }
 
     @Override
-    public void onPlayerPassed(Player player, Big2GameClientContext ctx) {
-    }
+    public void onPlayerPassed(Player player, Big2ClientContext context) { }
 
 }

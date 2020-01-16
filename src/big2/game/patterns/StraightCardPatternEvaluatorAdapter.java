@@ -26,9 +26,6 @@ public class StraightCardPatternEvaluatorAdapter implements CardPatternEvaluator
         return StraightBranchOfBoundExhaustion.enumerateCardPatterns(cards, cardPolicy);
     }
 
-
-
-
     public static class StraightCardPattern extends AbstractCardPattern {
         private int level;
         private Card card1;

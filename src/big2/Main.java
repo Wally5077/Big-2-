@@ -12,48 +12,48 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Big2Game big2Game = new Big2GameBuilder().build();
-        big2Game.addClientPlayer(new Client(new Player("Johnny")));
+        big2Game.addClientPlayer(new Client("Johnny"));
         big2Game.addClientPlayer(new NaiveAI("AI"));
         big2Game.addClientPlayer(new NaiveAI("AI"));
         big2Game.addClientPlayer(new NaiveAI("AI"));
         big2Game.start();
     }
 
-    public static class Client implements Big2GameClient {
+    public static class Client implements Big2Client {
         private Scanner scanner = new Scanner(System.in);
-        private Player player;
+        private String name;
         private HandCards handCards;
 
-        public Client(Player player) {
-            this.player = player;
+        public Client(String name) {
+            this.name = name;
         }
 
         @Override
-        public Player getPlayer() {
-            return player;
+        public String getName() {
+            return name;
         }
 
         @Override
-        public void onGameStart(int yourId) {
+        public void onGameStart(Player you) {
             System.out.println("The game is started!");
         }
 
         @Override
-        public void onReceiveHandCards(HandCards handCards, Big2GameClientContext context) {
-            this.handCards = handCards;
-        }
-
-        @Override
-        public void onPlayerTurn(Player player, boolean newRound, Big2GameClientContext context) {
+        public void onPlayerTurn(boolean isYourTurn, Player player, boolean newRound, Big2ClientContext context) {
             System.out.printf("It's %s's turn!\n", player.getName());
 
-            if (player.getId() == this.player.getId()) {
+            if (isYourTurn) {
                 printHandCardsInfo();
                 doMyTurn(context);
             }
         }
 
-        private void doMyTurn(Big2GameClientContext context) {
+        @Override
+        public void onReceiveHandCards(HandCards handCards, Big2ClientContext context) {
+            this.handCards = handCards;
+        }
+
+        private void doMyTurn(Big2ClientContext context) {
             int[] indices = askInputForCardIndicesWithFoolProof();
             if (indices[0] == -1) {
                 context.pass();
@@ -98,7 +98,7 @@ public class Main {
         }
 
         @Override
-        public void onNewCardPlay(Player player, CardPattern play, Big2GameClientContext context) {
+        public void onNewCardPlay(Player player, CardPattern play, Big2ClientContext context) {
             System.out.printf("The player %s  plays: %s.\n", player.getName(), play);
         }
 
@@ -108,14 +108,14 @@ public class Main {
         }
 
         @Override
-        public void onCardPlayInvalid(CardGroup play, Big2GameClientContext context) {
+        public void onCardPlayInvalid(CardGroup play, Big2ClientContext context) {
             System.out.println("The card play " + play + " is invalid.");
             printHandCardsInfo();
             doMyTurn(context);
         }
 
         @Override
-        public void onPlayerPassed(Player player, Big2GameClientContext ctx) {
+        public void onPlayerPassed(Player player, Big2ClientContext ctx) {
             System.out.println("The player " + player.getName() + " has passed.");
         }
     }

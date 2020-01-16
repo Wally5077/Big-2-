@@ -1,19 +1,44 @@
 package big2.game;
 
+import big2.cards.Deck;
 import big2.game.patterns.*;
 import big2.game.policies.*;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Big2GameBuilder {
+	private Deck deck = null;
+	private boolean sortedDeck = false;
+	private int deckShuffleTime = 3;
 	private CardPolicy cardPolicy = new StandardCardPolicy();
+
+	//TODO provide a way to construct the orderedCardPatternPolicy
 	private StandardCardPatternPolicy orderedCardPatternPolicy = new StandardCardPatternPolicy(cardPolicy);
 	private CardPlayPolicy cardPlayPolicy = new SamePatternPlayPolicy(orderedCardPatternPolicy);
 	private Messenger messenger = new SystemOutMessenger();
 	private List<CardPatternEvaluatorAdapter> evaluatorAdapters = StandardCardPatternEvaluatorAdapters.get();
 
+	public Big2GameBuilder deck(Deck deck) {
+		this.deck = Objects.requireNonNull(deck);
+		return this;
+	}
+
+	public Big2GameBuilder sortedDeck() {
+		this.sortedDeck = true;
+		return this;
+	}
+
+	public Big2GameBuilder shuffledDeck(int shuffleTimes) {
+		if (shuffleTimes < 0) {
+			throw new IllegalArgumentException("The shuffle times should be positive, given " +shuffleTimes + ".");
+		}
+		this.deckShuffleTime = shuffleTimes;
+		return this;
+	}
+
 	public Big2GameBuilder cardPolicy(CardPolicy policy) {
-		this.cardPolicy = policy;
+		this.cardPolicy =  Objects.requireNonNull(policy);
 		return this;
 	}
 
@@ -23,7 +48,7 @@ public class Big2GameBuilder {
 	}
 
 	public Big2GameBuilder cardPlayPolicy(CardPlayPolicy policy) {
-		this.cardPlayPolicy = policy;
+		this.cardPlayPolicy =  Objects.requireNonNull(policy);
 		return this;
 	}
 
@@ -39,8 +64,15 @@ public class Big2GameBuilder {
 
 	public Big2Game build() {
 		Big2Policy big2Policy = new CompositeBig2Policy(cardPolicy, orderedCardPatternPolicy, cardPlayPolicy);
-		return new Big2Game(messenger,
-				new CardPatternEvaluator(big2Policy, evaluatorAdapters), big2Policy);
+		CardPatternEvaluator evaluator = new CardPatternEvaluator(big2Policy, evaluatorAdapters);
+
+		if (deck == null) {
+			deck = new Deck();
+			if (!sortedDeck) {
+				deck.shuffle(deckShuffleTime);
+			}
+		}
+		return new Big2Game(messenger, evaluator, big2Policy, deck);
 	}
 
 }

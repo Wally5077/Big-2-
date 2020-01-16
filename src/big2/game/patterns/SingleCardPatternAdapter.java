@@ -7,7 +7,7 @@ import big2.game.policies.CardPolicy;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class SingleCardPatternEvaluatorAdapter implements CardPatternEvaluatorAdapter {
+public class SingleCardPatternAdapter implements CardPatternAdapter {
 
     @Override
     public boolean isMatched(CardGroup cardGroup, CardPolicy cardPolicy) {

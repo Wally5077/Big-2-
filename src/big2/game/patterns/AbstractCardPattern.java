@@ -2,6 +2,7 @@ package big2.game.patterns;
 
 import big2.cards.Card;
 import big2.game.policies.CardPolicy;
+import big2.utils.ArrayUtils;
 
 import java.util.Arrays;
 
@@ -20,6 +21,9 @@ public abstract class AbstractCardPattern implements CardPattern {
                 .toArray(Card[]::new));
     }
 
+    public boolean contains(Card card) {
+        return ArrayUtils.contains(cards, card);
+    }
 
     @Override
     public Card[] getCards() {

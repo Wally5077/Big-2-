@@ -43,14 +43,10 @@ public class Main {
             System.out.printf("It's %s's turn!\n", player.getName());
 
             if (isYourTurn) {
+                this.handCards = player.getHandCards();
                 printHandCardsInfo();
                 doMyTurn(context);
             }
-        }
-
-        @Override
-        public void onReceiveHandCards(HandCards handCards, Big2ClientContext context) {
-            this.handCards = handCards;
         }
 
         private void doMyTurn(Big2ClientContext context) {

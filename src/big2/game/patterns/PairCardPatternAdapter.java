@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class PairCardPatternEvaluatorAdapter implements CardPatternEvaluatorAdapter {
+public class PairCardPatternAdapter implements CardPatternAdapter {
 
     @Override
     public boolean isMatched(CardGroup cardGroup, CardPolicy cardPolicy) {

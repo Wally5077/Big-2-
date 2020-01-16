@@ -20,5 +20,6 @@ public interface Big2ClientContext {
 
     void pass();
 
-    Big2Policy getBig2Policy();
+    boolean isValidPlay(CardPattern cardPattern);
+
 }

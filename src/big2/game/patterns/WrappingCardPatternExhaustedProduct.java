@@ -1,32 +1,26 @@
 package big2.game.patterns;
 
 import big2.cards.CardGroup;
+import big2.game.CardPatternExhaustingAdapter;
 import big2.game.policies.Big2Policy;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class EagerCardPatternExhaustion implements CardPatternExhaustion {
-	private Collection<CardPatternEvaluatorAdapter> evaluatorAdapters;
+public class WrappingCardPatternExhaustedProduct implements CardPatternExhaustedProduct {
 	private Map<Class<? extends CardPattern>, List<CardPattern>> cardPatternMap;
 	private TreeSet<CardPattern> cardPatternTreeSet;
 
-	public EagerCardPatternExhaustion(Collection<CardPatternEvaluatorAdapter> evaluatorAdapters,
-									  CardGroup srcCardGroup,
-									  Big2Policy big2Policy) {
-		this.evaluatorAdapters = evaluatorAdapters;
+	public WrappingCardPatternExhaustedProduct(Collection<CardPattern> cardPatterns,
+											   Big2Policy big2Policy) {
 		cardPatternTreeSet = new TreeSet<>(big2Policy::compare);
-		cardPatternTreeSet.addAll(exhaustion(srcCardGroup, big2Policy));
+		cardPatternTreeSet.addAll(cardPatterns);
 		cardPatternMap = cardPatternTreeSet.stream().collect(Collectors.groupingBy(CardPattern::getClass));
 	}
 
-	private List<CardPattern> exhaustion(CardGroup srcCardGroup, Big2Policy big2Policy) {
-		return evaluatorAdapters.stream()
-				.flatMap(adapter -> adapter.exhaustCardPatterns(srcCardGroup, big2Policy).stream())
-				.collect(Collectors.toList());
+	@Override
+	public Collection<CardPattern> getCardPatterns() {
+		return cardPatternTreeSet;
 	}
 
 	@Override
@@ -69,4 +63,8 @@ public class EagerCardPatternExhaustion implements CardPatternExhaustion {
 		return cardPatternTreeSet.pollLast();
 	}
 
+	@Override
+	public Iterator<CardPattern> iterator() {
+		return cardPatternTreeSet.iterator();
+	}
 }

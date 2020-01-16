@@ -2,7 +2,7 @@ package big2.game;
 
 import big2.cards.*;
 import big2.game.patterns.CardPattern;
-import big2.game.patterns.CardPatternEvaluator;
+import big2.game.patterns.CardPatternFacade;
 import big2.game.patterns.CardPatternInvalidException;
 import big2.game.policies.Big2Policy;
 import big2.utils.ArrayUtils;
@@ -15,7 +15,7 @@ public class Big2Game implements Big2ClientContext {
     private final static Card CLUB3 = new Card(Rank.R3, Suit.CLUB);
     private Deck deck;
     private Messenger messenger;
-    private CardPatternEvaluator cardPatternEvaluator;
+    private CardPatternFacade cardPatternFacade;
     private Big2Policy big2Policy;
 
     /**
@@ -30,11 +30,11 @@ public class Big2Game implements Big2ClientContext {
     private int turn = -1;
 
     public Big2Game(Messenger messenger,
-                    CardPatternEvaluator cardPatternEvaluator,
+                    CardPatternFacade cardPatternFacade,
                     Big2Policy big2Policy, Deck deck) {
         this.deck = deck;
         this.messenger = messenger;
-        this.cardPatternEvaluator = cardPatternEvaluator;
+        this.cardPatternFacade = cardPatternFacade;
         this.big2Policy = big2Policy;
     }
 
@@ -62,15 +62,15 @@ public class Big2Game implements Big2ClientContext {
     private void distributeHandCards() {
         Card[][] cards = deck.deal(clients.size());
         for (int i = 0; i < clients.size(); i++) {
-            HandCards handcards = new HandCards(cardPatternEvaluator, cards[i]);
+            HandCards handcards = new HandCards(cardPatternFacade, cards[i]);
             Big2Client client = clients.get(i);
-            clientPlayerMap.get(client).setHandCards(handcards);
+            getPlayer(client).setHandCards(handcards);
         }
     }
 
     private int findFirstPlayerIndexWhoHoldsClub3() {
         for (int i = 0; i < clients.size(); i++) {
-            HandCards handCards = clientPlayerMap.get(clients.get(i)).getHandCards();
+            HandCards handCards = getPlayer(clients.get(i)).getHandCards();
             if (ArrayUtils.contains(handCards.getCards(), CLUB3)) {
                 return i;
             }
@@ -84,7 +84,7 @@ public class Big2Game implements Big2ClientContext {
         try {
             pass = 0;
             if (getPlayer(client).containsHandCards(cardPlay)) {
-                playCard(cardPatternEvaluator.evaluate(cardPlay));
+                playCard(cardPatternFacade.evaluate(cardPlay));
             } else {
                 client.onCardPlayInvalid(cardPlay, this);
             }
@@ -100,7 +100,7 @@ public class Big2Game implements Big2ClientContext {
     }
 
     private void overrideLastPlayPatternIfValid(CardPattern cardPlayPattern) {
-        if (newRound || big2Policy.isValidPlay(lastPlayPattern, cardPlayPattern)) {
+        if (isValidPlay(cardPlayPattern)) {
             lastPlayPattern = cardPlayPattern;
             Player currentPlayer = getCurrentPlayer();
             currentPlayer.removeHandCards(cardPlayPattern.getCards());
@@ -136,20 +136,19 @@ public class Big2Game implements Big2ClientContext {
     }
 
     @Override
-    public void talk(String msg) {
-        messenger.talk(getCurrentPlayer().getName(), msg);
+    public boolean isValidPlay(CardPattern cardPattern) {
+        return newRound || big2Policy.isValidPlay(lastPlayPattern, cardPattern);
     }
 
     @Override
-    public Big2Policy getBig2Policy() {
-        return big2Policy;
+    public void talk(String msg) {
+        messenger.talk(getCurrentPlayer().getName(), msg);
     }
 
     private void startNextPlayerTurn() {
         turn = turn + 1 >= clients.size() ? 0 : turn + 1;
         Big2Client currentClient = getCurrentClient();
         Player currentPlayer = getPlayer(currentClient);
-        currentClient.onReceiveHandCards(currentPlayer.getHandCards(), this);
         for (Big2Client client : clients) {
             client.onPlayerTurn(client == currentClient,
                     currentPlayer, newRound, this);

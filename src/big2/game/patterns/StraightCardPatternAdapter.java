@@ -7,7 +7,7 @@ import big2.utils.CardUtils;
 
 import java.util.Set;
 
-public class StraightCardPatternEvaluatorAdapter implements CardPatternEvaluatorAdapter {
+public class StraightCardPatternAdapter implements CardPatternAdapter {
 
     @Override
     public boolean isMatched(CardGroup cardGroup, CardPolicy cardPolicy) {
@@ -23,7 +23,7 @@ public class StraightCardPatternEvaluatorAdapter implements CardPatternEvaluator
 
     @Override
     public Set<StraightCardPattern> exhaustCardPatterns(CardGroup cards, CardPolicy cardPolicy) {
-        return StraightBranchAndBoundExhaustion.enumerateCardPatterns(cards, cardPolicy);
+        return StraightBranchAndBoundExhausting.enumerateCardPatterns(cards, cardPolicy);
     }
 
     public static class StraightCardPattern extends AbstractCardPattern {

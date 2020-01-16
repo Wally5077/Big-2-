@@ -17,7 +17,7 @@ public class Big2GameBuilder {
 	private StandardCardPatternPolicy orderedCardPatternPolicy = new StandardCardPatternPolicy(cardPolicy);
 	private CardPlayPolicy cardPlayPolicy = new SamePatternPlayPolicy(orderedCardPatternPolicy);
 	private Messenger messenger = new SystemOutMessenger();
-	private List<CardPatternEvaluatorAdapter> evaluatorAdapters = StandardCardPatternEvaluatorAdapters.get();
+	private List<CardPatternAdapter> cardPatternAdapters = StandardCardPatternAdapters.get();
 
 	public Big2GameBuilder deck(Deck deck) {
 		this.deck = Objects.requireNonNull(deck);
@@ -57,14 +57,14 @@ public class Big2GameBuilder {
 		return this;
 	}
 
-	public Big2GameBuilder registerCardPatternEvaluatorAdapter(CardPatternEvaluatorAdapter adapter) {
-		evaluatorAdapters.add(adapter);
+	public Big2GameBuilder registerCardPatternEvaluatorAdapter(CardPatternAdapter adapter) {
+		cardPatternAdapters.add(adapter);
 		return this;
 	}
 
 	public Big2Game build() {
 		Big2Policy big2Policy = new CompositeBig2Policy(cardPolicy, orderedCardPatternPolicy, cardPlayPolicy);
-		CardPatternEvaluator evaluator = new CardPatternEvaluator(big2Policy, evaluatorAdapters);
+		CardPatternFacade evaluator = new CardPatternFacade(big2Policy, cardPatternAdapters);
 
 		if (deck == null) {
 			deck = new Deck();

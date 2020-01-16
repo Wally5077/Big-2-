@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class FourOfRankCardPatternEvaluatorAdapter implements CardPatternEvaluatorAdapter {
+public class FourOfRankCardPatternEvaluatingAdapter implements CardPatternAdapter {
     @Override
     public boolean isMatched(CardGroup cardGroup, CardPolicy cardPolicy) {
         if (cardGroup.size() != 5) {

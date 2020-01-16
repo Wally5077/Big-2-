@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class FlushCardPatternEvaluatorAdapter implements CardPatternEvaluatorAdapter {
+public class FlushCardPatternAdapter implements CardPatternAdapter {
     @Override
     public boolean isMatched(CardGroup cardGroup, CardPolicy cardPolicy) {
         return cardGroup.size() == 5 && cardGroup.allInSameSuit();

@@ -5,12 +5,12 @@ import big2.cards.CardGroup;
 import big2.cards.Rank;
 import big2.cards.Suit;
 import big2.game.patterns.*;
-import big2.game.patterns.FlushCardPatternEvaluatorAdapter.FlushCardPattern;
-import big2.game.patterns.FourOfRankCardPatternEvaluatorAdapter.FourOfRankCardPattern;
-import big2.game.patterns.FullHouseCardPatternEvaluatorAdapter.FullHouseCardPattern;
-import big2.game.patterns.PairCardPatternEvaluatorAdapter.PairCardPattern;
-import big2.game.patterns.SingleCardPatternEvaluatorAdapter.SingleCardPattern;
-import big2.game.patterns.StraightCardPatternEvaluatorAdapter.StraightCardPattern;
+import big2.game.patterns.FlushCardPatternAdapter.FlushCardPattern;
+import big2.game.patterns.FourOfRankCardPatternEvaluatingAdapter.FourOfRankCardPattern;
+import big2.game.patterns.FullHouseCardPatternAdapter.FullHouseCardPattern;
+import big2.game.patterns.PairCardPatternAdapter.PairCardPattern;
+import big2.game.patterns.SingleCardPatternAdapter.SingleCardPattern;
+import big2.game.patterns.StraightCardPatternAdapter.StraightCardPattern;
 import big2.game.policies.CardPolicy;
 import big2.game.policies.StandardCardPolicy;
 import org.junit.Test;
@@ -22,7 +22,7 @@ public class CardPatternEvaluatorTest {
 
     @Test
     public void testSingleCardPatternEvaluatorAdapter() {
-        SingleCardPatternEvaluatorAdapter adapter = new SingleCardPatternEvaluatorAdapter();
+        SingleCardPatternAdapter adapter = new SingleCardPatternAdapter();
 
         Card card = new Card(Rank.A, Suit.CLUB);
         CardGroup cardGroup = new CardGroup(card);
@@ -35,7 +35,7 @@ public class CardPatternEvaluatorTest {
 
     @Test
     public void testPairCardPatternEvaluatorAdapter() {
-        PairCardPatternEvaluatorAdapter adapter = new PairCardPatternEvaluatorAdapter();
+        PairCardPatternAdapter adapter = new PairCardPatternAdapter();
 
         CardGroup cardGroup = new CardGroup(new Card(Rank.R2, Suit.CLUB), new Card(Rank.R2, Suit.DIAMOND));
 
@@ -47,7 +47,7 @@ public class CardPatternEvaluatorTest {
 
     @Test
     public void testStraightEvaluatorAdapter() {
-        StraightCardPatternEvaluatorAdapter adapter = new StraightCardPatternEvaluatorAdapter();
+        StraightCardPatternAdapter adapter = new StraightCardPatternAdapter();
 
         CardGroup cardGroup = new CardGroup(
                 new Card(Rank.A, Suit.CLUB), new Card(Rank.R2, Suit.DIAMOND),
@@ -62,8 +62,8 @@ public class CardPatternEvaluatorTest {
 
     @Test
     public void testStraightFlushEvaluatorAdapter() {
-        StraightFlushCardPatternEvaluatorAdapter adapter =
-                new StraightFlushCardPatternEvaluatorAdapter(new FlushCardPatternEvaluatorAdapter(), new StraightCardPatternEvaluatorAdapter());
+        StraightFlushCardPatternAdapter adapter =
+                new StraightFlushCardPatternAdapter(new FlushCardPatternAdapter(), new StraightCardPatternAdapter());
 
         CardGroup cardGroup = new CardGroup(
                 new Card(Rank.A, Suit.CLUB), new Card(Rank.R2, Suit.CLUB),
@@ -78,7 +78,7 @@ public class CardPatternEvaluatorTest {
 
     @Test
     public void testFlushEvaluatorAdapter() {
-        FlushCardPatternEvaluatorAdapter adapter = new FlushCardPatternEvaluatorAdapter();
+        FlushCardPatternAdapter adapter = new FlushCardPatternAdapter();
 
         CardGroup cardGroup = new CardGroup(
                 new Card(Rank.A, Suit.CLUB), new Card(Rank.J, Suit.CLUB),
@@ -93,7 +93,7 @@ public class CardPatternEvaluatorTest {
 
     @Test
     public void testFullHouseEvaluatorAdapter() {
-        FullHouseCardPatternEvaluatorAdapter adapter = new FullHouseCardPatternEvaluatorAdapter();
+        FullHouseCardPatternAdapter adapter = new FullHouseCardPatternAdapter();
 
         CardGroup cardGroup = new CardGroup(
                 new Card(Rank.R4, Suit.CLUB), new Card(Rank.R4, Suit.DIAMOND),
@@ -109,7 +109,7 @@ public class CardPatternEvaluatorTest {
 
     @Test
     public void testFourOfRankEvaluatorAdapter() {
-        FourOfRankCardPatternEvaluatorAdapter adapter = new FourOfRankCardPatternEvaluatorAdapter();
+        FourOfRankCardPatternEvaluatingAdapter adapter = new FourOfRankCardPatternEvaluatingAdapter();
 
         CardGroup cardGroup = new CardGroup(
                 new Card(Rank.R4, Suit.CLUB), new Card(Rank.R4, Suit.DIAMOND),

@@ -4,13 +4,14 @@ import big2.cards.CardGroup;
 import big2.game.policies.Big2Policy;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
-public class CardPatternEvaluator {
+public class CardPatternFacade {
 	private Big2Policy big2Policy;
-	private Collection<CardPatternEvaluatorAdapter> evaluatorAdapters;
+	private Collection<CardPatternAdapter> evaluatorAdapters;
 
-	public CardPatternEvaluator(Big2Policy big2Policy,
-								Collection<CardPatternEvaluatorAdapter>
+	public CardPatternFacade(Big2Policy big2Policy,
+							 Collection<CardPatternAdapter>
 										evaluatorAdapters) {
 		this.big2Policy = big2Policy;
 		this.evaluatorAdapters = evaluatorAdapters;
@@ -24,8 +25,11 @@ public class CardPatternEvaluator {
 				.orElseThrow(CardPatternInvalidException::new);
 	}
 
-	public CardPatternExhaustion enumerateCardPatterns(CardGroup cardGroup) {
-		return new EagerCardPatternExhaustion(evaluatorAdapters, cardGroup, big2Policy);
+	public CardPatternExhaustedProduct exhaustCardPatterns(CardGroup cardGroup) {
+		return new WrappingCardPatternExhaustedProduct(
+				evaluatorAdapters.stream()
+				.flatMap(adapter -> adapter.exhaustCardPatterns(cardGroup, big2Policy).stream())
+				.collect(Collectors.toList()), big2Policy);
 	}
 
 	public Big2Policy getBig2Policy() {

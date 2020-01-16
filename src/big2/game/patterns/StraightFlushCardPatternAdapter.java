@@ -2,18 +2,18 @@ package big2.game.patterns;
 
 import big2.cards.Card;
 import big2.cards.CardGroup;
-import big2.game.patterns.StraightCardPatternEvaluatorAdapter.StraightCardPattern;
+import big2.game.patterns.StraightCardPatternAdapter.StraightCardPattern;
 import big2.game.policies.CardPolicy;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class StraightFlushCardPatternEvaluatorAdapter implements CardPatternEvaluatorAdapter {
-    private FlushCardPatternEvaluatorAdapter flushEvaluator;
-    private StraightCardPatternEvaluatorAdapter straightEvaluator;
+public class StraightFlushCardPatternAdapter implements CardPatternAdapter {
+    private FlushCardPatternAdapter flushEvaluator;
+    private StraightCardPatternAdapter straightEvaluator;
 
-    public StraightFlushCardPatternEvaluatorAdapter(FlushCardPatternEvaluatorAdapter flushEvaluator,
-                                                    StraightCardPatternEvaluatorAdapter straightEvaluator) {
+    public StraightFlushCardPatternAdapter(FlushCardPatternAdapter flushEvaluator,
+                                           StraightCardPatternAdapter straightEvaluator) {
         this.flushEvaluator = flushEvaluator;
         this.straightEvaluator = straightEvaluator;
     }

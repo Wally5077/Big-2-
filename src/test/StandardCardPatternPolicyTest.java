@@ -1,12 +1,12 @@
 package test;
 
-import big2.game.patterns.FlushCardPatternEvaluatorAdapter.FlushCardPattern;
-import big2.game.patterns.FourOfRankCardPatternEvaluatorAdapter.FourOfRankCardPattern;
-import big2.game.patterns.FullHouseCardPatternEvaluatorAdapter.FullHouseCardPattern;
-import big2.game.patterns.SingleCardPatternEvaluatorAdapter.SingleCardPattern;
-import big2.game.patterns.PairCardPatternEvaluatorAdapter.PairCardPattern;
-import big2.game.patterns.StraightCardPatternEvaluatorAdapter.StraightCardPattern;
-import big2.game.patterns.StraightFlushCardPatternEvaluatorAdapter.StraightFlushCardPattern;
+import big2.game.patterns.FlushCardPatternAdapter.FlushCardPattern;
+import big2.game.patterns.FourOfRankCardPatternEvaluatingAdapter.FourOfRankCardPattern;
+import big2.game.patterns.FullHouseCardPatternAdapter.FullHouseCardPattern;
+import big2.game.patterns.SingleCardPatternAdapter.SingleCardPattern;
+import big2.game.patterns.PairCardPatternAdapter.PairCardPattern;
+import big2.game.patterns.StraightCardPatternAdapter.StraightCardPattern;
+import big2.game.patterns.StraightFlushCardPatternAdapter.StraightFlushCardPattern;
 import big2.game.policies.StandardCardPatternPolicy;
 import big2.game.policies.StandardCardPolicy;
 import org.junit.Test;

@@ -9,7 +9,7 @@ import big2.utils.CardUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class FullHouseCardPatternEvaluatorAdapter implements CardPatternEvaluatorAdapter {
+public class FullHouseCardPatternAdapter implements CardPatternAdapter {
 
     @Override
     public boolean isMatched(CardGroup cardGroup, CardPolicy cardPolicy) {

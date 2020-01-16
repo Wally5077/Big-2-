@@ -3,13 +3,13 @@ package test;
 import big2.cards.Card;
 import big2.cards.CardGroup;
 import big2.game.patterns.*;
-import big2.game.patterns.FlushCardPatternEvaluatorAdapter.FlushCardPattern;
-import big2.game.patterns.FourOfRankCardPatternEvaluatorAdapter.FourOfRankCardPattern;
-import big2.game.patterns.FullHouseCardPatternEvaluatorAdapter.FullHouseCardPattern;
-import big2.game.patterns.PairCardPatternEvaluatorAdapter.PairCardPattern;
-import big2.game.patterns.SingleCardPatternEvaluatorAdapter.SingleCardPattern;
-import big2.game.patterns.StraightCardPatternEvaluatorAdapter.StraightCardPattern;
-import big2.game.patterns.StraightFlushCardPatternEvaluatorAdapter.StraightFlushCardPattern;
+import big2.game.patterns.FlushCardPatternAdapter.FlushCardPattern;
+import big2.game.patterns.FourOfRankCardPatternEvaluatingAdapter.FourOfRankCardPattern;
+import big2.game.patterns.FullHouseCardPatternAdapter.FullHouseCardPattern;
+import big2.game.patterns.PairCardPatternAdapter.PairCardPattern;
+import big2.game.patterns.SingleCardPatternAdapter.SingleCardPattern;
+import big2.game.patterns.StraightCardPatternAdapter.StraightCardPattern;
+import big2.game.patterns.StraightFlushCardPatternAdapter.StraightFlushCardPattern;
 import big2.game.policies.CardPolicy;
 import big2.game.policies.StandardCardPolicy;
 import big2.utils.CollectionUtils;
@@ -28,12 +28,12 @@ import static org.junit.Assert.assertEquals;
 ;
 
 @SuppressWarnings("Duplicates")
-public class CardPatternExhaustionTest {
+public class CardPatternExhausterTest {
     CardPolicy cardPolicy = new StandardCardPolicy();
 
     @Test
     public void exhaustSingles() {
-        SingleCardPatternEvaluatorAdapter adapter = new SingleCardPatternEvaluatorAdapter();
+        SingleCardPatternAdapter adapter = new SingleCardPatternAdapter();
         CardGroup cardGroup = new CardGroup(new Card(A, CLUB),
                                     new Card(A, HEART),
                                     new Card(A, SPADE),
@@ -50,7 +50,7 @@ public class CardPatternExhaustionTest {
 
     @Test
     public void exhaustPairs() {
-        PairCardPatternEvaluatorAdapter adapter = new PairCardPatternEvaluatorAdapter();
+        PairCardPatternAdapter adapter = new PairCardPatternAdapter();
         CardGroup cardGroup = new CardGroup(new Card(A, CLUB),
                 new Card(A, HEART),
                 new Card(A, SPADE),
@@ -67,7 +67,7 @@ public class CardPatternExhaustionTest {
 
     @Test
     public void exhaustStraights() {
-        StraightCardPatternEvaluatorAdapter adapter = new StraightCardPatternEvaluatorAdapter();
+        StraightCardPatternAdapter adapter = new StraightCardPatternAdapter();
         CardGroup cardGroup = new CardGroup(false, new Card(A, CLUB),  //0
                                         new Card(R2, HEART), //1
                                         new Card(R2, DIAMOND), //2
@@ -95,7 +95,7 @@ public class CardPatternExhaustionTest {
 
     @Test
     public void exhaustFullHouse() {
-        FullHouseCardPatternEvaluatorAdapter adapter = new FullHouseCardPatternEvaluatorAdapter();
+        FullHouseCardPatternAdapter adapter = new FullHouseCardPatternAdapter();
         CardGroup cardGroup = new CardGroup(false, new Card(R7, CLUB),  //0
                                         new Card(R2, HEART), //1
                                         new Card(R2, DIAMOND), //2
@@ -127,7 +127,7 @@ public class CardPatternExhaustionTest {
 
     @Test
     public void exhaustFourOfRank() {
-        FourOfRankCardPatternEvaluatorAdapter adapter = new FourOfRankCardPatternEvaluatorAdapter();
+        FourOfRankCardPatternEvaluatingAdapter adapter = new FourOfRankCardPatternEvaluatingAdapter();
         CardGroup cardGroup = new CardGroup(false, new Card(A, CLUB),  //0
                                                 new Card(A, HEART), //1
                                                 new Card(A, DIAMOND), //2
@@ -163,7 +163,7 @@ public class CardPatternExhaustionTest {
 
     @Test
     public void exhaustFlush() {
-        FlushCardPatternEvaluatorAdapter adapter = new FlushCardPatternEvaluatorAdapter();
+        FlushCardPatternAdapter adapter = new FlushCardPatternAdapter();
         CardGroup cardGroup = new CardGroup(false, new Card(A, CLUB),  //0 *
                                             new Card(R2, HEART), //1
                                             new Card(R3, CLUB), //2 *
@@ -191,9 +191,9 @@ public class CardPatternExhaustionTest {
 
     @Test
     public void exhaustStraightFlush() {
-        StraightFlushCardPatternEvaluatorAdapter adapter =
-                new StraightFlushCardPatternEvaluatorAdapter(new FlushCardPatternEvaluatorAdapter(),
-                        new StraightCardPatternEvaluatorAdapter());
+        StraightFlushCardPatternAdapter adapter =
+                new StraightFlushCardPatternAdapter(new FlushCardPatternAdapter(),
+                        new StraightCardPatternAdapter());
 
         CardGroup cardGroup = new CardGroup(false, new Card(A, CLUB),  //0 *
                                             new Card(R2, HEART), //1

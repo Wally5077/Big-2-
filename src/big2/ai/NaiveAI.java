@@ -2,15 +2,15 @@ package big2.ai;
 
 import big2.cards.CardGroup;
 import big2.game.Big2ClientContext;
-import big2.game.HandCards;
 import big2.game.Messenger;
 import big2.game.Player;
 import big2.game.patterns.CardPattern;
-import big2.game.patterns.CardPatternExhaustion;
+import big2.game.patterns.CardPatternExhaustedProduct;
+
+import java.util.List;
 
 public class NaiveAI extends AI {
     private String name;
-    private HandCards handCards;
 
     public NaiveAI(String name) {
         this.name = name;
@@ -27,9 +27,9 @@ public class NaiveAI extends AI {
     }
 
     @Override
-    public void onPlayerTurn(boolean isYourTurn, Player player, boolean newRound, Big2ClientContext context) {
+    protected void onPlayerTurn(boolean isYourTurn, Player player, boolean newRound, List<CardPattern> validOptions, Big2ClientContext context) {
         if (isYourTurn) {
-            CardPatternExhaustion exhaustion = handCards.exhaustCardPatterns();
+            CardPatternExhaustedProduct exhaustion = player.getHandCards().exhaustCardPatterns();
             if (context.isNewRound()) {
                 context.playCard(exhaustion.pollLastCardPattern());
             } else {
@@ -39,11 +39,6 @@ public class NaiveAI extends AI {
                         .orElse(context::pass);
             }
         }
-    }
-
-    @Override
-    public void onReceiveHandCards(HandCards handCards, Big2ClientContext context) {
-        this.handCards = handCards;
     }
 
     @Override

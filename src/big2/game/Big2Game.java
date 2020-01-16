@@ -12,12 +12,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class Big2Game {
+public class Big2Game implements Big2ClientContext {
     private final static Card CLUB3 = new Card(Rank.R3, Suit.CLUB);
+    private Deck deck;
     private CardPattern lastPlayPattern;
+    private boolean newRound;
     private Messenger messenger;
-    private List<Big2GameClientContext> playerClients = new ArrayList<>(4);
-    private HashMap<Big2GameClient, HandCards> handCardsMap = new HashMap<>();
+    private List<Big2Client> clients = new ArrayList<>(4);
+    private HashMap<Big2Client, HandCards> handCardsMap = new HashMap<>();
     private CardPatternEvaluator cardPatternEvaluator;
     private Big2Policy big2Policy;
     private int pass = 0;
@@ -25,51 +27,42 @@ public class Big2Game {
 
     public Big2Game(Messenger messenger,
                     CardPatternEvaluator cardPatternEvaluator,
-                    Big2Policy big2Policy) {
+                    Big2Policy big2Policy, Deck deck) {
+        this.deck = deck;
         this.messenger = messenger;
         this.cardPatternEvaluator = cardPatternEvaluator;
         this.big2Policy = big2Policy;
     }
 
-    public void addClientPlayer(Big2GameClient client) {
-        int id = playerClients.size();
-        playerClients.add(new Big2GameClientContext(id, this, messenger, client));
+    public void addClientPlayer(Big2Client client) {
+        int id = clients.size();
+        client.getPlayer().setId(id);
+        clients.add(client);
     }
 
     public void start() {
-        distributeHandCards(createShuffledDeck());
-        broadcast(ctx -> ctx.getClient().onGameStart(ctx.getId()));
-        startTheClub3PlayerTurn();
+        distributeHandCards();
+        broadcast(client -> client.onGameStart());
         startNextPlayerTurn(false);
     }
 
-
-    private Deck createShuffledDeck() {
-        Deck deck = new Deck();
-        deck.shuffle();
-        return deck;
-    }
-
-    private void distributeHandCards(Deck deck) {
-        Card[][] cards = deck.deal(playerClients.size());
-        for (int i = 0; i < playerClients.size(); i++) {
+    private void distributeHandCards() {
+        Card[][] cards = deck.deal(clients.size());
+        for (int i = 0; i < clients.size(); i++) {
             HandCards handcards = new HandCards(cardPatternEvaluator, cards[i]);
             // find the first player who holds club 3
             if (turn == -1 && ArrayUtils.contains(cards[i], CLUB3)) {
                 turn = i;
             }
-            Big2GameClientContext clientContext = playerClients.get(i);
+            Big2ClientContext clientContext = clients.get(i);
             handCardsMap.put(clientContext.getClient(), handcards);
         }
     }
 
-    private void startTheClub3PlayerTurn() {
-        playCard(new CardGroup(CLUB3));
-    }
-
+    @Override
     public void playCard(CardGroup cardPlay) {
-        Big2GameClientContext context = getCurrentClientContext();
-        Big2GameClient client = context.getClient();
+        Big2ClientContext context = getCurrentClientContext();
+        Big2Client client = context.getClient();
 
         try {
             pass = 0;
@@ -84,6 +77,7 @@ public class Big2Game {
         }
     }
 
+    @Override
     public void playCard(CardPattern cardPlayPattern) {
         overrideLastPlayPatterIfValid(cardPlayPattern);
         startNextPlayerTurnOrGameOver();
@@ -96,7 +90,7 @@ public class Big2Game {
             handCardsMap.put(getCurrentClient(), currentHandCards.exclude(cardPlayPattern.getCards()));
             broadcast(ctx -> ctx.getClient().onNewCardPlay(getCurrentPlayer(), cardPlayPattern, ctx));
         } else {
-            Big2GameClientContext context = getCurrentClientContext();
+            Big2ClientContext context = getCurrentClientContext();
             context.getClient().onCardPlayInvalid(new CardGroup(cardPlayPattern.getCards()), context);
         }
     }
@@ -113,10 +107,11 @@ public class Big2Game {
         return handCardsMap.get(getCurrentClient()).isEmpty();
     }
 
+    @Override
     public void pass() {
         Player currentPlayer = getCurrentPlayer();
         boolean newRound = false;
-        if (++pass  == playerClients.size()) {
+        if (++pass  == clients.size()) {
             pass = 0;
             newRound = true;
             lastPlayPattern = null;
@@ -125,37 +120,49 @@ public class Big2Game {
         startNextPlayerTurn(newRound);
     }
 
+    @Override
+    public void talk(String msg) {
+        messenger.talk(getCurrentPlayer().getName(), msg);
+    }
+
+    @Override
+    public Big2Policy getBig2Policy() {
+        return big2Policy;
+    }
+
+    /**
+     * @param newRound whether all players have passed, the dominating player can start a new round,
+     *                 i.e. the next player can play any card-pattern if set true.
+     */
     private void startNextPlayerTurn(boolean newRound) {
-        turn = turn + 1 >= playerClients.size() ? 0 : turn + 1;
-        Big2GameClientContext context = getCurrentClientContext();
-        context.getClient().onReceiveHandCards(handCardsMap.get(context.getClient()), context);
-        broadcast(ctx -> ctx.getClient().onPlayerTurn(context.getPlayer(), newRound, playerClients.get(turn)));
+        turn = turn + 1 >= clients.size() ? 0 : turn + 1;
+        Big2Client client = getCurrentClient();
+        client.onReceiveHandCards(client.getHandCards()), this);
+        broadcast(ctx -> ctx.getClient().onPlayerTurn(context.getPlayer(), newRound, clients.get(turn)));
     }
 
 
-    private void broadcast(Consumer<Big2GameClientContext> clientConsumer) {
-        for (Big2GameClientContext clientContext : playerClients) {
-            clientConsumer.accept(clientContext);
+    private void broadcast(Consumer<Big2Client> clientConsumer) {
+        for (Big2Client client : clients) {
+            clientConsumer.accept(client);
         }
     }
 
     private Player getCurrentPlayer() {
-        return getCurrentClientContext().getPlayer();
+        return getCurrentClient().getPlayer();
     }
 
-    private Big2GameClient getCurrentClient() {
-        return getCurrentClientContext().getClient();
+    private Big2Client getCurrentClient() {
+        return clients.get(turn);
     }
 
-    private Big2GameClientContext getCurrentClientContext() {
-        return playerClients.get(turn);
-    }
-
+    @Override
     public CardPattern getLastCardPlayPattern() {
         return lastPlayPattern;
     }
 
-    public Big2Policy getPolicy() {
-        return big2Policy;
+    @Override
+    public boolean isNewRound() {
+        return false;
     }
 }

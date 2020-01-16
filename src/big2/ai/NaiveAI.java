@@ -2,7 +2,6 @@ package big2.ai;
 
 import big2.cards.CardGroup;
 import big2.game.patterns.CardPattern;
-import big2.game.Big2GameClientContext;
 import big2.game.HandCards;
 import big2.game.Messenger;
 import big2.game.Player;
@@ -25,7 +24,6 @@ public class NaiveAI extends AI {
     public void onGameStart(int yourId) {
         player.setName(player.getName() + "-" + yourId);
     }
-
 
     @Override
     public void onReceiveHandCards(HandCards handCards, Big2GameClientContext context) {
